@@ -49,7 +49,8 @@ public class hello implements JistAPI.Entity
   {
     System.out.println("starting simulation.");
     hello h = new hello();
-    h.myEvent();
+    //h.myEvent();
+    System.out.println("Wenxuan");
   }
 
 } // class: hello

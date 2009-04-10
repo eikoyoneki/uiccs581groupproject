@@ -1,0 +1,53 @@
+Changelog:
+
+driver
+	Added: FlowHandler, GenericDriver, JistExperiment, VisualizerInterface, Visualizer, images
+jist.runtime
+	Rewriter.java: Added ignored packages to support XML encoding/decoding
+	Controller.java: Added support for pausing
+	JistAPI_Impl.java: Added support for pausing
+	JistAPI.java: Added support for pause/resume
+jist.swans
+	Constants.java: Added various constants
+jist.swans.field
+	Field.java: Added accessor methods for location and mobility information
+	Mobility.java: Added support for speed, bearing and “stopped” information, also added new mobility models and completed existing ones
+	Pathloss.java: Added generic pathloss with shadowing model
+	Added RadioData, RadioDataInterface, Signal classes (for supporting multichannel eventually)
+	Added StreetMobility*, StreetPlacement* files to support STRAW mobility model
+	Added jist.swans.field.streets in support of STRAW
+jist.swans.mac
+	Added MacStats to track Mac-layer statistics
+	Mac802_11: Rearranged constructor, corrected some propagation delay calculations, added support for unhandled radio modes (e.g. In radioIdle()), added support for dropped packed notification to higher layers, added support for recording of channel activity
+	MacInterface: Added support for setting of network interface and radio data
+jist.swans.misc
+	Astar*, StartPoint.java: Support for A* search algorithm (needed for STRAW shortest-time path calculations)
+	Location: Added support for bearing calculation
+	Pickle: Added support for serialization of objects (needed for porting to real-world code)
+	StatInterface: Early support for statistics
+	Timer.java: Added support for reusable (not one-shot) timer
+	Util.java: Added support for writing data to files
+jist.swans.net
+	MessageQueue: Added support for a drop message queue (messages dropped after queue buffer exceeded)
+	NetAddress: Overrides compareTo, toInt, hashCode
+	NetAddressIpFactory: Added to support lower-cost creation of NetAddresses
+	NetInterface: Added get/set methods for protocol information, packet dropping, access to the message queue and mac interface
+	NetIp: Added IpStats, implemented new NetInterface methods, added support for promiscuity
+	NetMessage: Added support for “location” and “next hop” headers, added setters
+jist.swans.radio
+	Added Channel, RadioEvent, RadioMessage, RadioMode for future support of multichannel
+	RadioInfo: Added RadioInfoUnique
+	RadioInterface: Added support for recording radio activity
+	RadioNoise: Added support for recording congestion, activity
+jist.swans.route
+	Added geo package to contain classes common to geographic location
+	*GPSR*: Added GPSR implemenation
+	NS2Timer: Implemented Ns-2 style timers
+	RouteCache, RouteDsr*_ns2: Port of ns-2 DSR to SWANS
+	RouteInterface: Added support for access to net entity, packet dropping, added interfaces for new routing protocols
+	All routing protocols: Added support for new interfaces, added visualization for some
+jist.swans.trans
+	TransInterface: Transport layer now has access to network layer
+tariavo
+	Various utilities for tariavo's code
+

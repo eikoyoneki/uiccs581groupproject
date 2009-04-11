@@ -1,27 +1,39 @@
 //Wenxuan Gao, spring 2009
 package driver;
 
+import java.util.Random;
+
 public class ReportItem {
 	private long report_id;
 	private int home_node;
 	private int size;
 	private double value;
 	
-	public ReportItem(){}
+	private int numOfHit = 0; //number of hit for this report in the certain node
+	private int numOfOtherHit = 0; //number of hit for other report in the node after the hit of itself
+
+	public ReportItem(int seed)
+	{
+		Random randomGenerator = new Random(seed);
+		value = Math.atan(randomGenerator.nextDouble());
+	}
 	
-	public ReportItem(long id, int node, int size, double value) {
+	public ReportItem()
+	{
+		Random randomGenerator = new Random();
+		value = Math.atan(randomGenerator.nextDouble());
+	}
+	
+	public ReportItem(long id, int node, int seed) {
 		//super();
 		//check the boundary condition here
-		if(value <=0 || value >=1)
-			{
-			System.out.println("value should be between 0 and 1");
-			System.exit(1);
-			}
+		Random randomGenerator = new Random(seed);
+		value = Math.atan(randomGenerator.nextDouble());
 		
 		this.report_id = id;
 		this.home_node = node;
-		this.size = size;
-		this.value = value;
+		
+		
 	}
 	
 	

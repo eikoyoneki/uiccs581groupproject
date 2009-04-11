@@ -28,8 +28,7 @@ public class Query {
 			center *= randomGenerator.nextDouble();
 		}
 		double limit = Math.min(center, 1-center);
-		range = limit * randomGenerator.nextDouble();
-				
+		range = limit * randomGenerator.nextDouble();	
 	}
 	
 	
@@ -72,4 +71,6 @@ public class Query {
 	this.center = center;
 	this.range = range;
 	}
+	
+	
 }

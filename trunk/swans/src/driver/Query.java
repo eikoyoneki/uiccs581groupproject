@@ -1,5 +1,7 @@
 package driver;
 
+import java.util.Random;
+
 public class Query {
 	
 	double center;
@@ -16,6 +18,21 @@ public class Query {
 		this.center = q.center;
 		this.range = q.range;		
 	}
+	
+	public Query(int seed)
+	{
+        Random randomGenerator = new Random(seed);
+        center = Math.abs(randomGenerator.nextGaussian());
+		while(center > 1)
+		{
+			center *= randomGenerator.nextDouble();
+		}
+		double limit = Math.min(center, 1-center);
+		range = limit * randomGenerator.nextDouble();
+				
+	}
+	
+	
 	public Query(double center, double range) {
 		//super();
 		//check the boundary condition here

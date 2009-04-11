@@ -1,3 +1,4 @@
+//Wenxuan Gao  spring 2009
 package driver;
 
 import java.util.*;
@@ -35,9 +36,7 @@ public class QueryBook {
 		QueryItem query = new QueryItem();
 		query.setQuery_id(++gQN);
 		query.setQuery(center, range);
-		this.getQueryList().add(query);
-				
-		return gQN;
+		return addQuery(query);
 	}
 	
 	synchronized public long addQuery(QueryItem q){
@@ -73,7 +72,7 @@ public class QueryBook {
 	}
 	
 	public boolean isQueryExisting(long q_id) {
-		// query how much space is available for the specified event
+		// 
 		QueryItem queryItem = null;
 		Iterator<QueryItem> it=null;
 		it = this.getQueryList().iterator();

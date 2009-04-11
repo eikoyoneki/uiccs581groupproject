@@ -1,3 +1,4 @@
+//Wenxuan Gao, Spring 2009 
 package driver;
 
 public class QueryItem {
@@ -6,11 +7,7 @@ public class QueryItem {
 	double center;
 	double range;
 	
-	public QueryItem()
-	{
-		//this.center = 0.5;
-		//this.range =0.1;		
-	}
+	public QueryItem() { }
 	
 	public QueryItem(long id, int node, double center, double range) {
 		//super();

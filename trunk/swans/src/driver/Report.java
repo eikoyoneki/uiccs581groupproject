@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class Report {
 	private double value;
+	private int numOfHit = 0; //number of hit for this report in the certain node
+	private int numOfOtherHit = 0; //number of hit for other report in the node after the hit of itself
 
 	public Report(int seed)
 	{
@@ -17,6 +19,27 @@ public class Report {
 		value = Math.atan(randomGenerator.nextDouble());
 	}
 	
+	
+	public int getNumOfHit()
+	{
+		return numOfHit;
+	}
+
+	public void setNumOfHit(int numOfHit)
+	{
+		this.numOfHit = numOfHit;
+	}
+
+	public int getNumOfOtherHit()
+	{
+		return numOfOtherHit;
+	}
+
+	public void setNumOfOtherHit(int numOfOtherHit)
+	{
+		this.numOfOtherHit = numOfOtherHit;
+	}
+
 	public double getValue()
 	{
 		return value;

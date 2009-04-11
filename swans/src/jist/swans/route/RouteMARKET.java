@@ -1,8 +1,8 @@
 package jist.swans.route;
 
-import driver.Query;
-import driver.QueryDB;
-import driver.ReportDB;
+import driver.QueryBook;
+import driver.QueryItem;
+import driver.ReportBook;
 import jist.swans.field.Field;
 import jist.swans.mac.MacAddress;
 import jist.swans.misc.Message;
@@ -12,27 +12,28 @@ import jist.swans.route.geo.LocationDatabase;
 //the node we use in our experiment
 public class RouteMARKET extends RouteGPSR
 {
-	private QueryDB querDB;
-	private ReportDB reportDB;
+	//store the queries and reports in a node
+	private QueryBook querDB;
+	private ReportBook reportDB;
 	
 	
 	
-	public QueryDB getQuerDB()
+	public QueryBook getQuerDB()
 	{
 		return querDB;
 	}
 
-	public void setQuerDB(QueryDB querDB)
+	public void setQuerDB(QueryBook querDB)
 	{
 		this.querDB = querDB;
 	}
 
-	public ReportDB getReportDB()
+	public ReportBook getReportDB()
 	{
 		return reportDB;
 	}
 
-	public void setReportDB(ReportDB reportDB)
+	public void setReportDB(ReportBook reportDB)
 	{
 		this.reportDB = reportDB;
 	}
@@ -48,7 +49,7 @@ public class RouteMARKET extends RouteGPSR
 		
 	}
 	
-	public void queryLocalDB(Query query)
+	public void queryLocalDB(QueryItem query)
 	{
 		
 	}

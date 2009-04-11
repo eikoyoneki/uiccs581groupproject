@@ -1,13 +1,28 @@
 //Wenxuan Gao, Spring 2009 
 package driver;
 
+import java.util.Random;
+
 public class QueryItem {
 	long  query_id;
 	int home_node;
 	double center;
 	double range;
 	
-	public QueryItem() { }
+	public QueryItem() { super(); }
+	
+	
+	public QueryItem(int seed)
+	{
+        Random randomGenerator = new Random(seed);
+        center = Math.abs(randomGenerator.nextGaussian());
+		while(center > 1)
+		{
+			center *= randomGenerator.nextDouble();
+		}
+		double limit = Math.min(center, 1-center);
+		range = limit * randomGenerator.nextDouble();	
+	}
 	
 	public QueryItem(long id, int node, double center, double range) {
 		//super();

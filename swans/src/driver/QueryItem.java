@@ -66,4 +66,8 @@ public class QueryItem {
 	public void setHome_node(int home_node) {//may be used in the 2nd query pattern
 		this.home_node = home_node;
 	}
+
+	public void setQuery_id(long query_id) {
+		this.query_id = query_id;
+	}
 }

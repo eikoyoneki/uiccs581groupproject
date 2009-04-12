@@ -6,10 +6,11 @@ import java.util.*;
 
 public class QueryBook {
 	static private long gQN = 0;//global Query number control
-	private Vector<QueryItem> QueryList;
+	private LinkedList<QueryItem> QueryList;
+	private final int sizeLimit = 10; 
 	
 	public QueryBook(){
-		QueryList = new Vector<QueryItem>();
+		QueryList = new LinkedList<QueryItem>();
 	}
 	public QueryBook(QueryBook book){
 		gQN = book.gQN;
@@ -21,10 +22,10 @@ public class QueryBook {
 	public static void setGQN(long gqn) {
 		gQN = gqn;
 	}
-	public Vector<QueryItem> getQueryList() {
+	public LinkedList<QueryItem> getQueryList() {
 		return QueryList;
 	}
-	public void setQueryList(Vector<QueryItem> queryList) {
+	public void setQueryList(LinkedList<QueryItem> queryList) {
 		QueryList = queryList;
 	}
 	

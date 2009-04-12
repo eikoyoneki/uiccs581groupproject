@@ -7,6 +7,7 @@ import java.util.Vector;
 public class ReportBook {
 	static private long gRN = 0;//global report number control
 	private Vector<ReportItem> ReportList;
+	private final int sizeLimit = 10;
 	
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -62,6 +63,25 @@ public class ReportBook {
 			}
 		}
 		return false;
+	}
+	
+	public void match(QueryItem q)
+	{
+		for(ReportItem qi : ReportList)
+		{
+			long reportId = qi.getReport_id();
+			if(qi.match(q))
+			{
+				for(ReportItem otherqi : ReportList)
+				{
+					if(otherqi.getReport_id() != reportId)
+						otherqi.increaseOtherHit();
+				}
+				
+				qi.setNumOfOtherHit(0);
+				qi.increaseHit();
+			}
+		}
 	}
 	
 	synchronized public boolean delReport(ReportItem r){

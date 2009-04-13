@@ -79,8 +79,8 @@ public class QueryBook {
 	
 	
 	//FIFO, add new item to the tail
-	synchronized public void addFirst(QueryItem q){
-		this.getQueryList().addFirst(q);		
+	synchronized public void addLast(QueryItem q){
+		this.getQueryList().addLast(q);		
 	}
 	
 	public boolean isQueryExisting(long q_id) {

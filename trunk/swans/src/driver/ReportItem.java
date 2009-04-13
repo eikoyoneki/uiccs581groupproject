@@ -17,6 +17,12 @@ public class ReportItem
 	
 	private int numOfHit2 = 0;
 	private int numOfOtherHit2 = 0; //the number of hit correspond to the LRU2, and LFU2
+	
+	private int duration = 0;   //how long the report stay in the reportDB
+	private double freq = 0;	//frequency of report accessed,added in need of LFU
+								// = numOfHit / duration, 
+								//should be updated every simulation time
+	private double freq2 = 0;   //used for LFU2,= numOfHit2 / duration, 
 
 
 
@@ -150,6 +156,30 @@ public class ReportItem
 	public void setNumOfOtherHit(int numOfOtherHit)
 	{
 		this.numOfOtherHit = numOfOtherHit;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	public double getFreq() {
+		return freq;
+	}
+	
+	public double getFreq2() {
+		return freq2;
+	}
+
+	public void setFreq() {
+		this.freq = (double)this.numOfHit/(double)this.duration;
+	}
+	
+	public void setFreq2() {
+		this.freq2 = (double)this.numOfHit2/(double)this.duration;
 	}
 
 }

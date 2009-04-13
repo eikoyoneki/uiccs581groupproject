@@ -13,13 +13,13 @@ public class CacheScheme
 	}
 	public static void LRU1(ReportBook reportBook)
 	{
-		TreeMap<Integer,ReportItem> tempMap = new TreeMap<Integer,ReportItem>();
+		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
 		for(ReportItem ri : reportBook.getReportList())
 		{
-			tempMap.put(ri.getNumOfOtherHit(), ri);
+			tempMap.put((double)(ri.getNumOfOtherHit())/(double)ri.getSize(), ri);
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
-		for(int otherhit : tempMap.keySet())
+		for(Double otherhit : tempMap.keySet())
 		{
 			newList.add(tempMap.get(otherhit));
 		}
@@ -27,13 +27,13 @@ public class CacheScheme
 	}
 	public static void LRU2(ReportBook reportBook)
 	{
-		TreeMap<Integer,ReportItem> tempMap = new TreeMap<Integer,ReportItem>();
+		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
 		for(ReportItem ri : reportBook.getReportList())
 		{
-			tempMap.put(ri.getNumOfOtherHit2(), ri);
+			tempMap.put((double)ri.getNumOfOtherHit2()/(double)ri.getSize(), ri);
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
-		for(int otherhit : tempMap.keySet())
+		for(Double otherhit : tempMap.keySet())
 		{
 			newList.add(tempMap.get(otherhit));
 		}
@@ -41,13 +41,14 @@ public class CacheScheme
 	}
 	public static void LFU1(ReportBook reportBook)
 	{
-		TreeMap<Integer,ReportItem> tempMap = new TreeMap<Integer,ReportItem>();
+		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
 		for(ReportItem ri : reportBook.getReportList())
 		{
-			tempMap.put(ri.getNumOfHit(), ri);
+			tempMap.put(ri.getFreq()/ri.getSize(), ri);
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
-		for(int otherhit : tempMap.keySet())
+		
+		for(Double otherhit : tempMap.keySet())
 		{
 			newList.add(tempMap.get(otherhit));
 		}
@@ -55,13 +56,13 @@ public class CacheScheme
 	}
 	public static void LFU2(ReportBook reportBook)
 	{
-		TreeMap<Integer,ReportItem> tempMap = new TreeMap<Integer,ReportItem>();
+		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
 		for(ReportItem ri : reportBook.getReportList())
 		{
-			tempMap.put(ri.getNumOfHit2(), ri);
+			tempMap.put(ri.getFreq2()/ri.getSize(), ri);
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
-		for(int otherhit : tempMap.keySet())
+		for(Double otherhit : tempMap.keySet())
 		{
 			newList.add(tempMap.get(otherhit));
 		}

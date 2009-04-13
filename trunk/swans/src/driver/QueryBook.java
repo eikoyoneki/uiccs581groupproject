@@ -72,6 +72,17 @@ public class QueryBook {
 		
 	}
 	
+	//FIFO, delete the first item
+	synchronized public void delFirst(){
+		this.getQueryList().removeFirst();		
+	}
+	
+	
+	//FIFO, add new item to the tail
+	synchronized public void addFirst(QueryItem q){
+		this.getQueryList().addFirst(q);		
+	}
+	
 	public boolean isQueryExisting(long q_id) {
 		// 
 		QueryItem queryItem = null;

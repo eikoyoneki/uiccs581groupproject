@@ -9,9 +9,10 @@ public class ReportBook {
 	static private long gRN = 0;//global report number control
 	private Vector<ReportItem> ReportList;
 	private final int sizeLimit = 10;
-	private HashSet<Long> neighborReportIdList = new HashSet<Long>();
-	
-	
+	private HashSet<Long> neighborWantIdList = new HashSet<Long>();//want neighbor want IDSa - TSb
+	private HashSet<Long> selfunknowIdList = new HashSet<Long>(); //what the neighbor can offer IDSb - IDSa
+	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
+	private MALENA supplytrainer;
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -20,13 +21,13 @@ public class ReportBook {
 		gRN = book.gRN;
 		ReportList = book.getReportList();
 	}
+
 	
-	
-	
-	
-	
-	
-	//match a queryitem and update the number of hit if matched
+
+	/**
+	 * match a queryitem and update the number of hit if matched
+	 * @param q
+	 */
 	public void match(QueryItem q)
 	{
 		for(ReportItem qi : ReportList)
@@ -39,14 +40,14 @@ public class ReportBook {
 					if(otherqi.getReport_id() != reportId)
 					{
 						otherqi.increaseOtherHit();
-						if(!neighborReportIdList.contains(reportId))
+						if(neighborWantIdList.contains(reportId))
 							otherqi.increaseOtherHit2();
 					}
 				}
 				
 				qi.setNumOfOtherHit(0);
 				qi.increaseHit();
-				if(!neighborReportIdList.contains(reportId))
+				if(neighborWantIdList.contains(reportId))
 				{
 					qi.setNumOfOtherHit2(0);
 					qi.increaseHit2();
@@ -56,7 +57,12 @@ public class ReportBook {
 	}
 	
 
-	//create a msg body which contains the current report in the node
+
+	/**
+	 * create a msg body which contains the current report in the node
+	 * @param size
+	 * @return
+	 */
 	public Vector<ReportItem> createMsg(int size)
 	{
 		Vector<ReportItem> reporttoSend = new Vector();
@@ -91,6 +97,8 @@ public class ReportBook {
 			requiredsize += report.getSize();
 		}
 
+		//remove the low priority reports and 
+		//get enough space for the new reports
 		while(getBookSize() + requiredsize > sizeLimit)
 		{
 			delLastReport();
@@ -200,11 +208,11 @@ public class ReportBook {
 	//record down the report ids of the nodes that is communicating with itself 
 	public HashSet<Long> getNeighborReportIdList()
 	{
-		return neighborReportIdList;
+		return neighborWantIdList;
 	}
-	public void setNeighborReportIdList(HashSet<Long> neighborReportIdList)
+	public void setNeighborReportIdList(HashSet<Long> neighborWantIdList)
 	{
-		this.neighborReportIdList = neighborReportIdList;
+		this.neighborWantIdList = neighborWantIdList;
 	}
 	
 	public Vector<ReportItem> getReportList() {

@@ -11,6 +11,7 @@ public class CacheScheme
 	{
 		
 	}
+	
 	public static void LRU1(ReportBook reportBook)
 	{
 		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
@@ -21,10 +22,12 @@ public class CacheScheme
 		Vector<ReportItem> newList = new Vector<ReportItem>();
 		for(Double otherhit : tempMap.keySet())
 		{
+			//the priority is higher if the value is smaller
 			newList.add(tempMap.get(otherhit));
 		}
 		reportBook.setReportList(newList);
 	}
+	
 	public static void LRU2(ReportBook reportBook)
 	{
 		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
@@ -39,6 +42,8 @@ public class CacheScheme
 		}
 		reportBook.setReportList(newList);
 	}
+	
+	
 	public static void LFU1(ReportBook reportBook)
 	{
 		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
@@ -48,12 +53,15 @@ public class CacheScheme
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
 		
-		for(Double otherhit : tempMap.keySet())
+		for(Double otherhit : tempMap.descendingKeySet())
 		{
+			//the priority is higher if the value is larger
 			newList.add(tempMap.get(otherhit));
 		}
 		reportBook.setReportList(newList);
 	}
+	
+	
 	public static void LFU2(ReportBook reportBook)
 	{
 		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
@@ -62,7 +70,7 @@ public class CacheScheme
 			tempMap.put(ri.getFreq2()/ri.getSize(), ri);
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
-		for(Double otherhit : tempMap.keySet())
+		for(Double otherhit : tempMap.descendingKeySet())
 		{
 			newList.add(tempMap.get(otherhit));
 		}

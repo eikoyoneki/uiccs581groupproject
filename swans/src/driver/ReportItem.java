@@ -11,20 +11,20 @@ public class ReportItem
 	private double value;
 
 	private int numOfHit = 0; // number of hit for this report in the certain
-								// node
+	// node
 	private int numOfOtherHit = 0; // number of hit for other report in the node
-									// after the hit of itself
-	
+	// after the hit of itself
+
 	private int numOfHit2 = 0;
-	private int numOfOtherHit2 = 0; //the number of hit correspond to the LRU2, and LFU2
-	
-	private int duration = 0;   //how long the report stay in the reportDB
-	private double freq = 0;	//frequency of report accessed,added in need of LFU
-								// = numOfHit / duration, 
-								//should be updated every simulation time
-	private double freq2 = 0;   //used for LFU2,= numOfHit2 / duration, 
+	private int numOfOtherHit2 = 0; // the number of hit correspond to the LRU2,
+									// and LFU2
 
-
+	private int duration = 0; // how long the report stay in the reportDB
+	private double freq = 0; // frequency of report accessed,added in need of
+								// LFU
+								// = numOfHit / duration,
+								// should be updated every simulation time
+	private double freq2 = 0; // used for LFU2,= numOfHit2 / duration,
 
 	public ReportItem(int seed)
 	{
@@ -49,22 +49,40 @@ public class ReportItem
 		this.home_node = node;
 
 	}
-	
+
+
+	/**
+	 * when the nodes report transfered to other nodes
+	 *	the other node need to refresh the variables in the report
+	 */
+	public void refresh()
+	{
+		numOfHit = 1; 
+		numOfOtherHit = 0; 
+
+		numOfHit2 = 0;
+		numOfOtherHit2 = 0; 
+
+		duration = 1; 
+		freq = 1; 
+		freq2 = 0;
+	}
+
 	public void increaseOtherHit()
 	{
 		numOfOtherHit++;
 	}
-	
+
 	public void increaseHit()
 	{
 		numOfHit++;
 	}
-	
+
 	public void increaseOtherHit2()
 	{
 		numOfOtherHit2++;
 	}
-	
+
 	public void increaseHit2()
 	{
 		numOfHit2++;
@@ -118,6 +136,7 @@ public class ReportItem
 	{
 		this.value = value;
 	}
+
 	public int getNumOfHit2()
 	{
 		return numOfHit2;
@@ -158,28 +177,34 @@ public class ReportItem
 		this.numOfOtherHit = numOfOtherHit;
 	}
 
-	public int getDuration() {
+	public int getDuration()
+	{
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(int duration)
+	{
 		this.duration = duration;
 	}
 
-	public double getFreq() {
+	public double getFreq()
+	{
 		return freq;
 	}
-	
-	public double getFreq2() {
+
+	public double getFreq2()
+	{
 		return freq2;
 	}
 
-	public void setFreq() {
-		this.freq = (double)this.numOfHit/(double)this.duration;
+	public void setFreq()
+	{
+		this.freq = (double) this.numOfHit / (double) this.duration;
 	}
-	
-	public void setFreq2() {
-		this.freq2 = (double)this.numOfHit2/(double)this.duration;
+
+	public void setFreq2()
+	{
+		this.freq2 = (double) this.numOfHit2 / (double) this.duration;
 	}
 
 }

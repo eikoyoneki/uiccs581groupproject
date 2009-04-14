@@ -16,19 +16,7 @@ public class QueryBook {
 		gQN = book.gQN;
 		QueryList = book.getQueryList();
 	}
-	public static long getGQN() {
-		return gQN;
-	}
-	public static void setGQN(long gqn) {
-		gQN = gqn;
-	}
-	public LinkedList<QueryItem> getQueryList() {
-		return QueryList;
-	}
-	public void setQueryList(LinkedList<QueryItem> queryList) {
-		QueryList = queryList;
-	}
-	
+
 	
 	synchronized public long addQuery(int node, double center, double range){
 		//add a new query
@@ -103,6 +91,19 @@ public class QueryBook {
 	public boolean isQueryExisting(QueryItem q) {
 		long qid=q.getQuery_id();
 		return isQueryExisting(qid);
+	}
+	
+	public static long getGQN() {
+		return gQN;
+	}
+	public static void setGQN(long gqn) {
+		gQN = gqn;
+	}
+	public LinkedList<QueryItem> getQueryList() {
+		return QueryList;
+	}
+	public void setQueryList(LinkedList<QueryItem> queryList) {
+		QueryList = queryList;
 	}
 
 }

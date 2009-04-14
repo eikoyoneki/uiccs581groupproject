@@ -10,10 +10,8 @@ public class ReportItem
 	private int size;
 	private double value;
 
-	private int numOfHit = 0; // number of hit for this report in the certain
-	// node
-	private int numOfOtherHit = 0; // number of hit for other report in the node
-	// after the hit of itself
+	private int numOfHit = 0; // number of hit for this report in the certain node
+	private int numOfOtherHit = 0; // number of hit for other report in the node after the hit of itself
 
 	private int numOfHit2 = 0;
 	private int numOfOtherHit2 = 0; // the number of hit correspond to the LRU2,
@@ -21,10 +19,14 @@ public class ReportItem
 
 	private int duration = 0; // how long the report stay in the reportDB
 	private double freq = 0; // frequency of report accessed,added in need of
-								// LFU
-								// = numOfHit / duration,
+								// LFU = numOfHit / duration,
 								// should be updated every simulation time
 	private double freq2 = 0; // used for LFU2,= numOfHit2 / duration,
+	
+	private double demand = 0;
+	private double supply = 0;
+	private int age;
+	private int timeEncounteratNeighbor;// number of times the report has been encountered at a neighbor fi
 
 	public ReportItem(int seed)
 	{
@@ -50,6 +52,30 @@ public class ReportItem
 
 	}
 
+	/**
+	 * calculate the demand of a certain report
+	 * the query book is needed
+	 */
+	public void computeDemand(QueryBook querybook)
+	{
+		int querynum = querybook.getQueryList().size();
+		double demand = 0.0;
+		for(QueryItem query : querybook.getQueryList())
+		{
+			if(match(query))
+			{
+				demand += 1.0;
+			}
+		}
+		demand = demand / querynum;
+	}
+	
+	
+	public void computefi()
+	{
+		
+		timeEncounteratNeighbor++;
+	}
 
 	/**
 	 * when the nodes report transfered to other nodes
@@ -206,5 +232,17 @@ public class ReportItem
 	{
 		this.freq2 = (double) this.numOfHit2 / (double) this.duration;
 	}
+
+	public double getDemand()
+	{
+		return demand;
+	}
+
+	public void setDemand(double demand)
+	{
+		this.demand = demand;
+	}
+	
+	
 
 }

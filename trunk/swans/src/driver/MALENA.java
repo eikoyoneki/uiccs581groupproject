@@ -4,19 +4,45 @@ import java.util.Vector;
 
 public class MALENA
 {
-	class SupplyIV
+	public class SupplyIV
 	{
 		long reportId;
 		int age;
 		int timeEncounteratNeighbor;
 		boolean fresh;
+		
+		public SupplyIV(ReportItem report, boolean fresh)
+		{
+			reportId = report.getReport_id();
+			age = report.getAge();
+			timeEncounteratNeighbor = report.getTimeEncounteratNeighbor();
+			this.fresh = fresh;
+		}
 	}
 	
-	Vector<SupplyIV> trainExample = new Vector<SupplyIV>();
+	private Vector<SupplyIV> trainExample = new Vector<SupplyIV>();
 	
-	public void bayesianTrain()
+	public void bayesianTrain(ReportBook reportbook)
 	{
 		
 	}
+
+	public void addIV(ReportItem report, boolean fresh)
+	{
+		trainExample.add(new SupplyIV(report,fresh));
+	}
+	
+	
+	public Vector<SupplyIV> getTrainExample()
+	{
+		return trainExample;
+	}
+
+	public void setTrainExample(Vector<SupplyIV> trainExample)
+	{
+		this.trainExample = trainExample;
+	}
+	
+	
 	
 }

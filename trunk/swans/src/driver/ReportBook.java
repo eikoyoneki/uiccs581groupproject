@@ -22,43 +22,11 @@ public class ReportBook {
 	}
 	
 	
-	synchronized public long addReport(int node, int size, double value){
-		//add a new report
-		//Every new report have to be added using this method
-		//to ensure its id is unique
-		ReportItem report = new ReportItem();
-		report.setReport_id(++gRN);
-		report.setHome_node(node);
-		report.setSize(size);
-		report.setValue(value);
-		return addReport(report);
-	}
 	
-	synchronized public long addReport(ReportItem report) {
-		//add a existing report received from other nodes
-		this.getReportList().add(report);				
-		return gRN;
-	}
 	
-	synchronized public boolean delReport(long r_id ){
-		//delete an report
-		ReportItem reportItem = null;
-		Iterator<ReportItem> it=null;
-		it = this.getReportList().iterator();
-		while(it.hasNext())
-		{
-			reportItem =  it.next();
-
-			if(reportItem.getReport_id() == r_id)
-			{
-				//this is the order we should remove
-				it.remove();
-				return true;
-			}
-		}
-		return false;
-	}
 	
+	
+	//match a queryitem and update the number of hit if matched
 	public void match(QueryItem q)
 	{
 		for(ReportItem qi : ReportList)
@@ -87,6 +55,7 @@ public class ReportBook {
 		}
 	}
 	
+
 	//create a msg body which contains the current report in the node
 	public Vector<ReportItem> createMsg(int size)
 	{
@@ -107,10 +76,31 @@ public class ReportBook {
 		return reporttoSend;
 	}
 	
-	//add the reports received from other nodes
-	//how to rank the new reports added?
-	public void addReport(Vector<ReportItem> reportSet)
+
+	/**
+	 * add the reports received from other nodes in the msg
+	 * how to rank the new reports added?
+	 * @param reportSet
+	 */
+	public void mergeReport(Vector<ReportItem> reportSet)
 	{
+		rankReport();
+		int requiredsize = 0;
+		for(ReportItem report : reportSet)
+		{
+			requiredsize += report.getSize();
+		}
+
+		while(getBookSize() + requiredsize > sizeLimit)
+		{
+			delLastReport();
+		}
+
+		for(ReportItem report : reportSet)
+		{
+			report.refresh();
+			ReportList.add(report);
+		}
 		
 	}
 	
@@ -119,10 +109,63 @@ public class ReportBook {
 		CacheScheme.LRU1(this);
 	}
 	
+	public int getBookSize()
+	{
+		int i = 0;
+		for(ReportItem report : ReportList)
+		{
+			i += report.getSize();
+		}
+		return i;
+	}
+	
+	synchronized public void delLastReport()
+	{
+		int i = ReportList.size();
+		ReportList.remove(i - 1);
+	}
+	
 	
 	synchronized public boolean delReport(ReportItem r){
 		long rid= r.getReport_id();
 		return delReport(rid);		
+	}
+	
+	synchronized public boolean delReport(long r_id ){
+		//delete an report
+		ReportItem reportItem = null;
+		Iterator<ReportItem> it=null;
+		it = this.getReportList().iterator();
+		while(it.hasNext())
+		{
+			reportItem =  it.next();
+
+			if(reportItem.getReport_id() == r_id)
+			{
+				//this is the order we should remove
+				it.remove();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	synchronized public long addReport(int node, int size, double value){
+		//add a new report
+		//Every new report have to be added using this method
+		//to ensure its id is unique
+		ReportItem report = new ReportItem();
+		report.setReport_id(++gRN);
+		report.setHome_node(node);
+		report.setSize(size);
+		report.setValue(value);
+		return addReport(report);
+	}
+	
+	synchronized public long addReport(ReportItem report) {
+		//add a existing report received from other nodes
+		this.getReportList().add(report);				
+		return gRN;
 	}
 	
 	public boolean isReportExisting(long r_id) {

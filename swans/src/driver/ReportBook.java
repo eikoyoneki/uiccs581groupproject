@@ -57,6 +57,27 @@ public class ReportBook {
 	}
 	
 
+	/**
+	 * compute the supply of all the reports
+	 * after knowing the neighborWantIdList in communication step 2
+	 */
+	public void computeSupply()
+	{
+		for(ReportItem report : ReportList)
+		{
+			if(!neighborWantIdList.contains(report.getReport_id()))
+			{
+				supplytrainer.addIV(report, false);
+				report.increasefi();
+			}
+			else
+			{
+				supplytrainer.addIV(report, true);
+			}
+		}
+		supplytrainer.bayesianTrain(this);
+	}
+	
 
 	/**
 	 * create a msg body which contains the current report in the node

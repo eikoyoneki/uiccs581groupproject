@@ -71,9 +71,8 @@ public class ReportItem
 	}
 	
 	
-	public void computefi()
+	public void increasefi()
 	{
-		
 		timeEncounteratNeighbor++;
 	}
 
@@ -241,6 +240,36 @@ public class ReportItem
 	public void setDemand(double demand)
 	{
 		this.demand = demand;
+	}
+
+	public double getSupply()
+	{
+		return supply;
+	}
+
+	public void setSupply(double supply)
+	{
+		this.supply = supply;
+	}
+
+	public int getAge()
+	{
+		return age;
+	}
+
+	public void setAge(int age)
+	{
+		this.age = age;
+	}
+
+	public int getTimeEncounteratNeighbor()
+	{
+		return timeEncounteratNeighbor;
+	}
+
+	public void setTimeEncounteratNeighbor(int timeEncounteratNeighbor)
+	{
+		this.timeEncounteratNeighbor = timeEncounteratNeighbor;
 	}
 	
 	

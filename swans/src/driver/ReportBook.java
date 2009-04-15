@@ -22,7 +22,6 @@ public class ReportBook {
 		ReportList = book.getReportList();
 	}
 
-	
 
 	/**
 	 * match a queryitem and update the number of hit if matched

@@ -16,8 +16,6 @@ public class RouteMARKET extends RouteGPSR
 	private QueryBook querDB;
 	private ReportBook reportDB;
 	
-	
-	
 	public QueryBook getQuerDB()
 	{
 		return querDB;
@@ -55,5 +53,8 @@ public class RouteMARKET extends RouteGPSR
 		
 	}
 	
+	
+	
+
 
 }

@@ -7,9 +7,20 @@ import jist.swans.route.RouteMARKET;
 
 public class CacheScheme
 {
-	public static void GRS(RouteMARKET node)
+	public static void GRS(ReportBook reportBook)
 	{
-		
+		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
+		for(ReportItem ri : reportBook.getReportList())
+		{
+			tempMap.put((double)(ri.getDemand() * (1 - ri.getSupply()))/(double)ri.getSize(), ri);
+		}
+		Vector<ReportItem> newList = new Vector<ReportItem>();
+		for(Double grs : tempMap.keySet())
+		{
+			//the priority is higher if the value is smaller
+			newList.add(tempMap.get(grs));
+		}
+		reportBook.setReportList(newList);
 	}
 	
 	public static void LRU1(ReportBook reportBook)
@@ -53,10 +64,10 @@ public class CacheScheme
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
 		
-		for(Double otherhit : tempMap.descendingKeySet())
+		for(Double hit : tempMap.descendingKeySet())
 		{
 			//the priority is higher if the value is larger
-			newList.add(tempMap.get(otherhit));
+			newList.add(tempMap.get(hit));
 		}
 		reportBook.setReportList(newList);
 	}
@@ -70,9 +81,9 @@ public class CacheScheme
 			tempMap.put(ri.getFreq2()/ri.getSize(), ri);
 		}
 		Vector<ReportItem> newList = new Vector<ReportItem>();
-		for(Double otherhit : tempMap.descendingKeySet())
+		for(Double hit : tempMap.descendingKeySet())
 		{
-			newList.add(tempMap.get(otherhit));
+			newList.add(tempMap.get(hit));
 		}
 	}
 }

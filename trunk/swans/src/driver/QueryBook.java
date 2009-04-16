@@ -8,6 +8,7 @@ public class QueryBook {
 	static private long gQN = 0;//global Query number control
 	private LinkedList<QueryItem> QueryList;
 	private final int sizeLimit = 10; 
+	private HashSet<Long> queryIdSet = new HashSet<Long>();
 	
 	public QueryBook(){
 		QueryList = new LinkedList<QueryItem>();
@@ -18,57 +19,44 @@ public class QueryBook {
 	}
 
 	
-	synchronized public long addQuery(int node, double center, double range){
-		//add a new query
-		//Every new query have to be added using this method
-		//to ensure its id is unique
-		QueryItem query = new QueryItem();
-		query.setQuery_id(++gQN);
-		query.setQuery(center, range);
-		return addQuery(query);
-	}
-	
-	synchronized public long addQuery(QueryItem q){
-		//add a existing query
-		this.getQueryList().add(q);				
-		return gQN;
-	}
-	
-	
-	synchronized public boolean delQuery(long q_id ){
-		//delete an query
-		QueryItem queryItem = null;
-		Iterator<QueryItem> it=null;
-		it = this.getQueryList().iterator();
-		while(it.hasNext())
+	public void updateBook(QueryBook queryfromOther)
+	{
+		HashSet<QueryItem> queryneedSet = new HashSet();
+		for(QueryItem query : queryfromOther.getQueryList())
 		{
-			queryItem =  it.next();
-
-			if(queryItem.getQuery_id() == q_id)
-			{
-				//this is the order we should remove
-				it.remove();
-				return true;
-			}
+			if(!queryIdSet.contains(query.getQuery_id()))
+				queryneedSet.add(query);
 		}
-		return false;
+		int spaceneed = this.getSize() + queryneedSet.size() - sizeLimit;
+		if(spaceneed > 0)
+		{
+			for(int i = 0 ; i < spaceneed; ++i)
+				this.delFirst();
+		}
+		for(QueryItem query : queryneedSet)
+			this.addLast(query);
 	}
 	
-	synchronized public boolean delQuery(QueryItem q){
-		long qid= q.getQuery_id();
-		return delQuery(qid);
-		
+	public int getSize()
+	{
+		int size = 0;
+		size = QueryList.size();
+		return size;
 	}
 	
 	//FIFO, delete the first item
 	synchronized public void delFirst(){
-		this.getQueryList().removeFirst();		
+
+		this.queryIdSet.remove(this.QueryList.getFirst().getQuery_id());
+		this.getQueryList().removeFirst();	
+		
 	}
 	
 	
 	//FIFO, add new item to the tail
 	synchronized public void addLast(QueryItem q){
 		this.getQueryList().addLast(q);		
+		this.queryIdSet.add(q.getQuery_id());
 	}
 	
 	public boolean isQueryExisting(long q_id) {
@@ -105,5 +93,19 @@ public class QueryBook {
 	public void setQueryList(LinkedList<QueryItem> queryList) {
 		QueryList = queryList;
 	}
+	public HashSet<Long> getQueryIdSet()
+	{
+		return queryIdSet;
+	}
+	public void setQueryIdSet(HashSet<Long> queryIdSet)
+	{
+		this.queryIdSet = queryIdSet;
+	}
+	public int getSizeLimit()
+	{
+		return sizeLimit;
+	}
 
+	
+	
 }

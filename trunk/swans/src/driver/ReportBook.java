@@ -9,10 +9,12 @@ public class ReportBook {
 	static private long gRN = 0;//global report number control
 	private Vector<ReportItem> ReportList;
 	private final int sizeLimit = 10;
-	private HashSet<Long> neighborWantIdList = new HashSet<Long>();//want neighbor want IDSa - TSb
+	private HashSet<Long> neighborWantIdList = new HashSet<Long>();//what neighbor want IDSa - TSb
 	private HashSet<Long> selfunknowIdList = new HashSet<Long>(); //what the neighbor can offer IDSb - IDSa
 	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
+	private HashSet<Long> reportIdList = new HashSet<Long>();
 	private MALENA supplytrainer;
+	private HashSet<Long> answerSet = new HashSet<Long>();
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -92,12 +94,17 @@ public class ReportBook {
 		int currentsize = ReportList.get(i).getSize();
 		while(currentsize < size )
 		{
-			reporttoSend.add(ReportList.get(i));
-			i++;
-			if(i < reportnum)
-				currentsize += ReportList.get(i).getSize(); 
+			if(neighborWantIdList.contains(ReportList.get(i).getReport_id()))
+			{
+				reporttoSend.add(ReportList.get(i));
+				i++;
+				if(i < reportnum)
+					currentsize += ReportList.get(i).getSize(); 
+				else
+					break;
+			}
 			else
-				break;
+				i++;
 		}
 		return reporttoSend;
 	}
@@ -105,7 +112,8 @@ public class ReportBook {
 
 	/**
 	 * add the reports received from other nodes in the msg
-	 * how to rank the new reports added?
+	 * how to rank the new reports added, we defined our self
+	 * and we update the track set here.
 	 * @param reportSet
 	 */
 	public void mergeReport(Vector<ReportItem> reportSet)
@@ -128,6 +136,7 @@ public class ReportBook {
 		{
 			report.refresh();
 			ReportList.add(report);
+			trackSet.add(report.getReport_id());
 		}
 		
 	}
@@ -225,15 +234,7 @@ public class ReportBook {
 		gRN = grn;
 	}
 	
-	//record down the report ids of the nodes that is communicating with itself 
-	public HashSet<Long> getNeighborReportIdList()
-	{
-		return neighborWantIdList;
-	}
-	public void setNeighborReportIdList(HashSet<Long> neighborWantIdList)
-	{
-		this.neighborWantIdList = neighborWantIdList;
-	}
+
 	
 	public Vector<ReportItem> getReportList() {
 		return ReportList;
@@ -241,5 +242,57 @@ public class ReportBook {
 	public void setReportList(Vector<ReportItem> reportList) {
 		ReportList = reportList;
 	}
+	public HashSet<Long> getNeighborWantIdList()
+	{
+		return neighborWantIdList;
+	}
+	public void setNeighborWantIdList(HashSet<Long> neighborWantIdList)
+	{
+		this.neighborWantIdList = neighborWantIdList;
+	}
+	public HashSet<Long> getSelfunknowIdList()
+	{
+		return selfunknowIdList;
+	}
+	public void setSelfunknowIdList(HashSet<Long> selfunknowIdList)
+	{
+		this.selfunknowIdList = selfunknowIdList;
+	}
+	public HashSet<Long> getTrackSet()
+	{
+		return trackSet;
+	}
+	public void setTrackSet(HashSet<Long> trackSet)
+	{
+		this.trackSet = trackSet;
+	}
+	public MALENA getSupplytrainer()
+	{
+		return supplytrainer;
+	}
+	public void setSupplytrainer(MALENA supplytrainer)
+	{
+		this.supplytrainer = supplytrainer;
+	}
+	public int getSizeLimit()
+	{
+		return sizeLimit;
+	}
+	public HashSet<Long> getReportIdList()
+	{
+		if(!reportIdList.isEmpty())
+			reportIdList.clear();
+		for(ReportItem report : ReportList)
+		{
+			reportIdList.add(report.getReport_id());
+		}
+		return reportIdList;
+	}
+	public void setReportIdList(HashSet<Long> reportIdList)
+	{
+		this.reportIdList = reportIdList;
+	}
 
+	
+	
 }

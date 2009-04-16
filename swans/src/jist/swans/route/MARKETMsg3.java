@@ -10,6 +10,13 @@ public class MARKETMsg3
 	private HashSet<Long> reportNeed;
 	private Vector<ReportItem> answers;
 	private Vector<ReportItem> brokerReport;
+	
+	public MARKETMsg3()
+	{
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
 	public MARKETMsg3(Vector<ReportItem> answers,
 			Vector<ReportItem> brokerReport, HashSet<Long> reportNeed)
 	{
@@ -18,6 +25,7 @@ public class MARKETMsg3
 		this.brokerReport = brokerReport;
 		this.reportNeed = reportNeed;
 	}
+	
 	public HashSet<Long> getReportNeed()
 	{
 		return reportNeed;

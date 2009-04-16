@@ -10,9 +10,6 @@ public class MARKETMsg2
 	private HashSet<Long> reportUnknown;
 	private HashSet<Long> reportCanOffer;
 	
-	
-	
-	
 	public MARKETMsg2()
 	{
 		super();

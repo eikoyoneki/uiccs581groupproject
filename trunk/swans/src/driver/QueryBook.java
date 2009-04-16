@@ -9,6 +9,7 @@ public class QueryBook {
 	private LinkedList<QueryItem> QueryList;
 	private final int sizeLimit = 10; 
 	private HashSet<Long> queryIdSet = new HashSet<Long>();
+	private LinkedList<QueryItem> otherQueryList;
 	
 	public QueryBook(){
 		QueryList = new LinkedList<QueryItem>();
@@ -104,6 +105,14 @@ public class QueryBook {
 	public int getSizeLimit()
 	{
 		return sizeLimit;
+	}
+	public LinkedList<QueryItem> getOtherQueryList()
+	{
+		return otherQueryList;
+	}
+	public void setOtherQueryList(LinkedList<QueryItem> otherQueryList)
+	{
+		this.otherQueryList = otherQueryList;
 	}
 
 	

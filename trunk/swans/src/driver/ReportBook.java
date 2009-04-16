@@ -3,6 +3,7 @@ package driver;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Vector;
 
 public class ReportBook {
@@ -14,7 +15,7 @@ public class ReportBook {
 	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
 	private HashSet<Long> reportIdList = new HashSet<Long>();
 	private MALENA supplytrainer;
-	private HashSet<Long> answerSet = new HashSet<Long>();
+	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -36,6 +37,7 @@ public class ReportBook {
 			long reportId = qi.getReport_id();
 			if(qi.match(q))
 			{
+				answerSet.add(qi);
 				for(ReportItem otherqi : ReportList)
 				{
 					if(otherqi.getReport_id() != reportId)
@@ -53,9 +55,12 @@ public class ReportBook {
 					qi.setNumOfOtherHit2(0);
 					qi.increaseHit2();
 				}
+				
 			}
 		}
 	}
+	
+	
 	
 
 	/**
@@ -79,27 +84,68 @@ public class ReportBook {
 		supplytrainer.bayesianTrain(this);
 	}
 	
+	public void getHitReport(LinkedList<QueryItem> otherQueryList)
+	{
+		for(QueryItem query : otherQueryList)
+		{
+			match(query);
+		}
+	}
+	
+	
 
 	/**
 	 * create a msg body which contains the current report in the node
 	 * @param size
 	 * @return
 	 */
-	public Vector<ReportItem> createMsg(int size)
+	public Vector<ReportItem> createAnswerMsg(int size, LinkedList<QueryItem> otherQueryList)
+	{
+		
+		getHitReport(otherQueryList);
+		Vector<ReportItem> reporttoSend = new Vector();
+		rankReport();
+		int i = 0;
+		int reportnum = answerSet.size();
+		Vector<ReportItem> reportsCandidate = new Vector(answerSet);
+		
+		int currentsize = reportsCandidate.get(i).getSize();
+		while(currentsize < size && i < reportnum)
+		{
+			//the reports must be new to B and also hit by B's query
+			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
+			{
+				reporttoSend.add(reportsCandidate.get(i));
+				i++;
+				if(i < reportnum)
+					currentsize += reportsCandidate.get(i).getSize(); 
+				else
+					break;
+			}
+			else
+				i++;
+		}
+		return reporttoSend;
+	}
+	
+	public Vector<ReportItem> createBrokerMsg(int size)
 	{
 		Vector<ReportItem> reporttoSend = new Vector();
 		rankReport();
 		int i = 0;
 		int reportnum = ReportList.size();
-		int currentsize = ReportList.get(i).getSize();
-		while(currentsize < size )
+		Vector<ReportItem> reportsCandidate = new Vector(ReportList);
+		reportsCandidate.removeAll(answerSet);
+		int currentsize = reportsCandidate.get(i).getSize();
+		while(currentsize < size && i < reportnum)
 		{
-			if(neighborWantIdList.contains(ReportList.get(i).getReport_id()))
+			//the broker enhance rpeorts only have to be new to B
+			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
-				reporttoSend.add(ReportList.get(i));
+				reporttoSend.add(reportsCandidate.get(i));
 				i++;
 				if(i < reportnum)
-					currentsize += ReportList.get(i).getSize(); 
+					currentsize += reportsCandidate.get(i).getSize(); 
 				else
 					break;
 			}
@@ -143,7 +189,12 @@ public class ReportBook {
 	
 	public void rankReport()
 	{
-		CacheScheme.LRU1(this);
+		CacheScheme.LRU1(this.getReportList());
+	}
+	
+	public void rankReport(Vector<ReportItem> reports)
+	{
+		CacheScheme.LRU1(reports);
 	}
 	
 	public int getBookSize()
@@ -291,6 +342,14 @@ public class ReportBook {
 	public void setReportIdList(HashSet<Long> reportIdList)
 	{
 		this.reportIdList = reportIdList;
+	}
+	public HashSet<ReportItem> getAnswerSet()
+	{
+		return answerSet;
+	}
+	public void setAnswerSet(HashSet<ReportItem> answerSet)
+	{
+		this.answerSet = answerSet;
 	}
 
 	

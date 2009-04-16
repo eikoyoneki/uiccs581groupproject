@@ -1,10 +1,12 @@
 package jist.swans.route;
 
 import java.util.HashSet;
+import java.util.Vector;
 
 import driver.QueryBook;
 import driver.QueryItem;
 import driver.ReportBook;
+import driver.ReportItem;
 import jist.swans.field.Field;
 import jist.swans.mac.MacAddress;
 import jist.swans.misc.Message;
@@ -67,6 +69,7 @@ public class RouteMARKET extends RouteGPSR
 		//and also update my query database?
 		MARKETMsg2 msg2 = new MARKETMsg2();
 		msg2.setQuerybook(querybook);
+		querybook.setOtherQueryList(msg1.getQuerybook().getQueryList());
 		
 		HashSet<Long> iUnknow = new HashSet<Long>();
 		iUnknow = msg1.getreportCanOffer();
@@ -89,12 +92,35 @@ public class RouteMARKET extends RouteGPSR
 		reportbook.setSelfunknowIdList(msg2.getreportCanOffer());
 		reportbook.setNeighborWantIdList(msg2.getReportUnknown());
 		
-		return null;
+		//get the query book of the other node
+		querybook.setOtherQueryList(msg2.getQuerybook().getQueryList());
+		
+		
+		MARKETMsg3 msg3 = new MARKETMsg3();
+		msg3.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
+		int size = 0;
+		for(ReportItem report : msg3.getAnswers())
+		{
+			size += report.getSize();
+		}
+		if(size < msgSize)
+		{
+			msg3.setBrokerReport(reportbook.createBrokerMsg(msgSize - size));
+		}
+		else
+			msg3.setBrokerReport(new Vector());
+
+		return msg3;
 	}
 	
 	public MARKETMsg4 sendMsg4(MARKETMsg3 msg3)
 	{
 		return null;
+		
+	}
+	
+	public void receiveMSg4(MARKETMsg4 msg4)
+	{
 		
 	}
 

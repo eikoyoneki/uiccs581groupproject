@@ -115,13 +115,29 @@ public class RouteMARKET extends RouteGPSR
 	
 	public MARKETMsg4 sendMsg4(MARKETMsg3 msg3)
 	{
-		return null;
+		MARKETMsg4 msg4 = new MARKETMsg4();
+		reportbook.setNeighborWantIdList(msg3.getReportNeed());
+		
+		msg4.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
+		int size = 0;
+		for(ReportItem report : msg3.getAnswers())
+		{
+			size += report.getSize();
+		}
+		if(size < msgSize)
+		{
+			msg4.setBrokerReport(reportbook.createBrokerMsg(msgSize - size));
+		}
+		else
+			msg4.setBrokerReport(new Vector());
+
+		return msg4;
 		
 	}
 	
 	public void receiveMSg4(MARKETMsg4 msg4)
 	{
-		
+		reportbook.mergeReport(msg4.getAnswers());
 	}
 
 	public QueryBook getQuerybook()

@@ -8,6 +8,13 @@ public class MARKETMsg4
 {
 	private Vector<ReportItem> answers;
 	private Vector<ReportItem> brokerReport;
+	
+	
+	public MARKETMsg4()
+	{
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	public MARKETMsg4(Vector<ReportItem> answers,
 			Vector<ReportItem> brokerReport)
 	{

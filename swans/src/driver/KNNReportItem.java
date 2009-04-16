@@ -5,7 +5,7 @@ import java.util.Random;
 public class KNNReportItem {
 	
 	
-	int report_id;
+	long report_id;
 	int home_node;
 	int time;
 	double x;
@@ -31,7 +31,7 @@ public class KNNReportItem {
 	private int timeEncounteratNeighbor = 0;// number of times the report has been encountered at a neighbor fi
 
 	
-	public KNNReportItem(int report_id, int home_node, int time, double x,
+	public KNNReportItem(long report_id, int home_node, int time, double x,
 			double y, int seed) {
 		
 		Random randomGenerator = new Random(seed);
@@ -87,7 +87,7 @@ public class KNNReportItem {
 	// it's different for each node
 	public double match(KNNQueryItem q, double max_dist)
 	{
-		return Math.sqrt(Math.pow(q.x,2)+ Math.pow(q.y,2))/max_dist;
+		return Math.sqrt(Math.pow(q.getX(),2)+ Math.pow(q.getY(),2))/max_dist;
 		
 	}
 
@@ -118,11 +118,11 @@ public class KNNReportItem {
 		this.y = y;
 	}
 
-	public int getReport_id() {
+	public long getReport_id() {
 		return report_id;
 	}
 
-	public void setReport_id(int report_id) {
+	public void setReport_id(long report_id) {
 		this.report_id = report_id;
 	}
 

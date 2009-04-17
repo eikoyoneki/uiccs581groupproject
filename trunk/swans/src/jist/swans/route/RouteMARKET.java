@@ -22,6 +22,10 @@ import jist.swans.route.geo.LocationDatabase;
  * @author Xiaowen
  *
  */
+/**
+ * @author Xiaowen
+ *
+ */
 public class RouteMARKET extends RouteGPSR
 {
 	public RouteMARKET(Field field, int selfId, LocationDatabase ldb)
@@ -57,7 +61,7 @@ public class RouteMARKET extends RouteGPSR
 	}
 	
 	/**
-	 * when B reeive the msg1
+	 * when B receive the msg1
 	 * the node need to tell A all its quries
 	 * and what B does not know, and what B can offer
 	 * @param msg1
@@ -69,6 +73,7 @@ public class RouteMARKET extends RouteGPSR
 		//and also update my query database?
 		MARKETMsg2 msg2 = new MARKETMsg2();
 		msg2.setQuerybook(querybook);
+		//store the query list from A
 		querybook.setOtherQueryList(msg1.getQuerybook().getQueryList());
 		
 		HashSet<Long> iUnknow = new HashSet<Long>();
@@ -87,12 +92,24 @@ public class RouteMARKET extends RouteGPSR
 		
 	}
 	
+	
+	
+	
+	/**
+	 * after get msg2, A knows what B want and what B can offer
+	 * first A go through B's query and update the hit information of its reports
+	 * in the msg3, A first put the id's that A want from B
+	 * then A put all the report that hit by B's query and also B want
+	 * then if there is any space left, A put all the report that B want
+	 * @param msg2
+	 * @return
+	 */
 	public MARKETMsg3 sendMsg3(MARKETMsg2 msg2)
 	{
 		reportbook.setSelfunknowIdList(msg2.getreportCanOffer());
 		reportbook.setNeighborWantIdList(msg2.getReportUnknown());
-		
-		//get the query book of the other node
+		reportbook.getHitReport(querybook.getOtherQueryList());
+		//get the query book of B
 		querybook.setOtherQueryList(msg2.getQuerybook().getQueryList());
 		
 		
@@ -113,10 +130,20 @@ public class RouteMARKET extends RouteGPSR
 		return msg3;
 	}
 	
+	/**
+	 * after receive the msg3 from A,
+	 * B know what A want,
+	 * first B go through A's query and update the hit information of its reports
+	 * Then B put in the msg the report hit by A's query and also A want
+	 * then if any space left, B put the rest of the report want by A
+	 * @param msg3
+	 * @return
+	 */
 	public MARKETMsg4 sendMsg4(MARKETMsg3 msg3)
 	{
 		MARKETMsg4 msg4 = new MARKETMsg4();
 		reportbook.setNeighborWantIdList(msg3.getReportNeed());
+		reportbook.getHitReport(querybook.getOtherQueryList());
 		
 		msg4.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
 		int size = 0;
@@ -130,16 +157,26 @@ public class RouteMARKET extends RouteGPSR
 		}
 		else
 			msg4.setBrokerReport(new Vector());
+		
+		//update the query database
+		querybook.updateBook();
 
 		return msg4;
 		
 	}
 	
+	/**
+	 * after receive the msg from B
+	 * A just merge the report
+	 * @param msg4
+	 */
 	public void receiveMSg4(MARKETMsg4 msg4)
 	{
 		reportbook.mergeReport(msg4.getAnswers());
+		querybook.updateBook();
 	}
 
+	
 	public MARKETADVMsg sendAdvMsg()
 	{
 		MARKETADVMsg advMsg = new MARKETADVMsg(reportbook.createAdvMsg(msgSize));

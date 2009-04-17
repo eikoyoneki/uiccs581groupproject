@@ -22,6 +22,14 @@ public class MALENA
 			timeEncounteratNeighbor = report.getTimeEncounteratNeighbor();
 			this.fresh = fresh;
 		}
+		
+		public SupplyIV(KNNReportItem report, boolean fresh)
+		{
+			reportId = report.getReport_id();
+			reportTime = report.getCreateTime();
+			timeEncounteratNeighbor = report.getTimeEncounteratNeighbor();
+			this.fresh = fresh;
+		}
 
 		public SupplyIV(boolean fresh, long reportId, Calendar reportTime,
 				int timeEncounteratNeighbor)
@@ -131,7 +139,20 @@ public class MALENA
 	
 	public void bayesianTrain(KNNReportBook reportbook)
 	{
-		
+		for(Calendar c : trainExample.keySet())
+		{
+			for(Example example : trainData)
+			{
+				if(trainExample.get(c).age == example.age && trainExample.get(c).timeEncounteratNeighbor == example.fin)
+				{
+					for(KNNReportItem report : reportbook.getReportList())
+					{
+						if(report.getReport_id() == trainExample.get(c).reportId)
+							report.setSupply((double)example.newrecord / (double)example.totalrecord);
+					}
+				}
+			}
+		}
 	}
 	
 
@@ -142,7 +163,7 @@ public class MALENA
 	
 	public void addIV(KNNReportItem report, boolean fresh)
 	{
-		//trainExample.put(report.getCreateTime(), new SupplyIV(report,fresh));
+		trainExample.put(report.getCreateTime(), new SupplyIV(report,fresh));
 	}
 	
 	

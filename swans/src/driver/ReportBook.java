@@ -16,6 +16,7 @@ public class ReportBook {
 	private HashSet<Long> reportIdList = new HashSet<Long>();
 	private MALENA supplytrainer;
 	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();//store the report content that should send to the encountered neighbor
+	private HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node 
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -37,7 +38,7 @@ public class ReportBook {
 			long reportId = qi.getReport_id();
 			if(qi.match(q))
 			{
-				answerSet.add(qi);
+				answerSet.add(qi); // if match B's query, this report is a candidate in answer set
 				for(ReportItem otherqi : ReportList)
 				{
 					if(otherqi.getReport_id() != reportId)
@@ -113,6 +114,7 @@ public class ReportBook {
 			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
 				reporttoSend.add(reportsCandidate.get(i));
+				neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
 				i++;
 				if(i < reportnum)
 					currentsize += reportsCandidate.get(i).getSize(); 
@@ -140,6 +142,7 @@ public class ReportBook {
 			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
 				reporttoSend.add(reportsCandidate.get(i));
+				neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
 				i++;
 				if(i < reportnum)
 					currentsize += reportsCandidate.get(i).getSize(); 
@@ -152,7 +155,36 @@ public class ReportBook {
 		return reporttoSend;
 	}
 	
-
+	public Vector<ReportItem> createRelayMsg(int size)
+	{
+		Vector<ReportItem> reporttoSend = new Vector();
+		for(Long id : neverTransmitSet)
+		{
+			for(ReportItem report : ReportList)
+			{
+				if(report.getReport_id() == id)
+					reporttoSend.add(report);
+			}
+		}
+		rankReport(reporttoSend);
+		int i = 0;
+		int reportnum = neverTransmitSet.size();
+		int currentsize = reporttoSend.get(i).getSize();
+		while(currentsize < size && i < reportnum)
+		{
+			reporttoSend.add(reporttoSend.get(i));
+			neverTransmitSet.remove(reporttoSend.get(i).getReport_id());
+			i++;
+			if(i < reportnum)
+				currentsize += reporttoSend.get(i).getSize(); 
+			else
+				break;
+		}
+		return reporttoSend;
+	}
+	
+	
+	
 	/**
 	 * add the reports received from other nodes in the msg
 	 * how to rank the new reports added, we defined our self
@@ -180,6 +212,8 @@ public class ReportBook {
 			report.refresh();
 			ReportList.add(report);
 			trackSet.add(report.getReport_id());
+			reportIdList.add(report.getReport_id());
+			neverTransmitSet.add(report.getReport_id());
 		}
 		
 	}
@@ -207,44 +241,29 @@ public class ReportBook {
 	synchronized public void delLastReport()
 	{
 		int i = ReportList.size();
+		reportIdList.remove(ReportList.get(i - 1).getReport_id());
+		neverTransmitSet.remove(ReportList.get(i - 1).getReport_id());
 		ReportList.remove(i - 1);
+		
 	}
 	
 	
-	synchronized public boolean delReport(ReportItem r){
-		long rid= r.getReport_id();
-		return delReport(rid);		
-	}
 	
-	synchronized public boolean delReport(long r_id ){
-		//delete an report
-		ReportItem reportItem = null;
-		Iterator<ReportItem> it=null;
-		it = this.getReportList().iterator();
-		while(it.hasNext())
-		{
-			reportItem =  it.next();
-
-			if(reportItem.getReport_id() == r_id)
-			{
-				//this is the order we should remove
-				it.remove();
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	synchronized public long addReport(int node, int size, double value){
+	synchronized public long addReport(int node){
 		//add a new report
 		//Every new report have to be added using this method
 		//to ensure its id is unique
 		ReportItem report = new ReportItem();
 		report.setReport_id(++gRN);
 		report.setHome_node(node);
-		report.setSize(size);
-		report.setValue(value);
+		trackSet.add(report.getReport_id());
+		reportIdList.add(report.getReport_id());
+		neverTransmitSet.add(report.getReport_id());
+		
 		return addReport(report);
+		
+		
 	}
 	
 	synchronized public long addReport(ReportItem report) {

@@ -5,6 +5,7 @@ import java.util.*;
 
 
 public class QueryBook {
+	
 	static private long gQN = 0;//global Query number control
 	private LinkedList<QueryItem> QueryList;
 	private final int sizeLimit = 10; 
@@ -53,6 +54,19 @@ public class QueryBook {
 		
 	}
 	
+	//when globaly generate a query, we can use this method to add the query to the node
+	public void addQuery()
+	{
+		if(QueryList.size() == sizeLimit)
+		{
+			delFirst();
+			addLast(new QueryItem());
+		}
+		else
+		{
+			addLast(new QueryItem());
+		}
+	}
 	
 	//FIFO, add new item to the tail
 	synchronized public void addLast(QueryItem q){

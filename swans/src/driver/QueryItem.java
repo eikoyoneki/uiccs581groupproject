@@ -9,7 +9,17 @@ public class QueryItem {
 	double center;
 	double range;
 	
-	public QueryItem() { super(); }
+	public QueryItem() 
+	{ 
+		Random randomGenerator = new Random();
+	    center = Math.abs(randomGenerator.nextGaussian());
+		while(center > 1)
+		{
+			center *= randomGenerator.nextDouble();
+		}
+		double limit = Math.min(center, 1-center);
+		range = limit * randomGenerator.nextDouble(); 
+	}
 	
 	
 	public QueryItem(int seed)
@@ -24,24 +34,6 @@ public class QueryItem {
 		range = limit * randomGenerator.nextDouble();	
 	}
 	
-	public QueryItem(long id, int node, double center, double range) {
-		//super();
-		//check the boundary condition here
-		if(center <=0 || center >=1)
-			{
-			System.out.println("center should be between 0 and 1");
-			System.exit(1);
-			}
-		if(range<=0||range>=center || (center+range)>=1)
-		{
-			System.out.println("range must be positive and less than center");
-			System.exit(1);
-		}
-		this.query_id = id;
-		this.home_node = node;
-		this.center = center;
-		this.range = range;
-	}
 		
 	public double getCenter() {
 		return this.center;

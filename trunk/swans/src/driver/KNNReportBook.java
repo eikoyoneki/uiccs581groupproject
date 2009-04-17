@@ -287,13 +287,13 @@ public class KNNReportBook {
 	}
 		
 	
-	synchronized public long addReport(int node){
+	synchronized public long addReport(int node, double x, double y){
 		//add a new report
 		//Every new report have to be added using this method
 		//to ensure its id is unique
-		double x = 0, y=0;
-		//x = getNodeLocationX(node); //still need to be implemented
-		//y = getNodeLocationY(node);
+//		double x = 0, y=0;
+//		x = getNodeLocationX(node); //still need to be implemented
+//		y = getNodeLocationY(node);
 		
 		KNNReportItem report = new KNNReportItem(node,x,y);
 		report.setReport_id(++gRN);

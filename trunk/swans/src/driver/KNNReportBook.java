@@ -291,8 +291,9 @@ public class KNNReportBook {
 		//add a new report
 		//Every new report have to be added using this method
 		//to ensure its id is unique
-		double x = getNodeLocationX(node); //still need to be implemented
-		double y = getNodeLocationY(node);
+		double x = 0, y=0;
+		//x = getNodeLocationX(node); //still need to be implemented
+		//y = getNodeLocationY(node);
 		
 		KNNReportItem report = new KNNReportItem(node,x,y);
 		report.setReport_id(++gRN);

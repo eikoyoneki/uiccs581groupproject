@@ -23,7 +23,7 @@ public class Evaluation {
 	public double getMatch_throuhput() {
 		return match_throuhput;
 	}
-	public void setMatch_throuhput(double x) {
+	public void increaseMatch_throuhput(double x) {
 		this.match_throuhput += x;
 	}
 	public double getTotal_answers() {
@@ -56,9 +56,6 @@ public class Evaluation {
 		
 		return total_response_time/total_answered_query;
 	}
-
-	
-	
 	
 	
 

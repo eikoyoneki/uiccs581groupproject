@@ -104,55 +104,49 @@ public class ReportBook {
 		getHitReport(otherQueryList);
 		Vector<ReportItem> reporttoSend = new Vector();
 		rankReport();
-		int i = 0;
+		
 		int reportnum = answerSet.size();
 		Vector<ReportItem> reportsCandidate = new Vector(answerSet);
-		
-		int currentsize = reportsCandidate.get(i).getSize();
-		while(currentsize < size && i < reportnum)
+		int currentsize = 0;
+		for(int i = 0; i < reportnum; ++i)
 		{
-			//the reports must be new to B and also hit by B's query
 			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
-				reporttoSend.add(reportsCandidate.get(i));
-				neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
-				i++;
-				if(i < reportnum)
-					currentsize += reportsCandidate.get(i).getSize(); 
+				if((currentsize += reportsCandidate.get(i).getSize()) < size)
+				{
+					reporttoSend.add(reportsCandidate.get(i));
+					neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
+				}
 				else
 					break;
+					
 			}
-			else
-				i++;
 		}
+
 		return reporttoSend;
 	}
 	
 	public Vector<ReportItem> createBrokerMsg(int size)
 	{
 		Vector<ReportItem> reporttoSend = new Vector();
-		//if(this.getBookSize() > size)
-		rankReport();
-		int i = 0;
-		int reportnum = ReportList.size();
+		//do not have to rerank the report
 		Vector<ReportItem> reportsCandidate = new Vector(ReportList);
 		reportsCandidate.removeAll(answerSet);
-		int currentsize = reportsCandidate.get(i).getSize();
-		while(currentsize < size && i < reportnum)
+		int reportnum = reportsCandidate.size();
+		int currentsize = 0;
+		for(int i = 0; i < reportnum; ++i)
 		{
-			//the broker enhance rpeorts only have to be new to B
 			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
-				reporttoSend.add(reportsCandidate.get(i));
-				neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
-				i++;
-				if(i < reportnum)
-					currentsize += reportsCandidate.get(i).getSize(); 
+				if((currentsize += reportsCandidate.get(i).getSize()) < size)
+				{
+					reporttoSend.add(reportsCandidate.get(i));
+					neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
+				}
 				else
 					break;
+					
 			}
-			else
-				i++;
 		}
 		return reporttoSend;
 	}
@@ -166,7 +160,10 @@ public class ReportBook {
 			for(ReportItem report : ReportList)
 			{
 				if(report.getReport_id() == id)
+				{
 					reporttoSend.add(report);
+					neverTransmitSet.remove(report.getReport_id());
+				}
 			}
 		}
 		
@@ -185,19 +182,21 @@ public class ReportBook {
 			}
 		}
 		rankReport(reportCandidate);
-		int i = 0;
-		int reportnum = neverTransmitSet.size();
-		int currentsize = reportCandidate.get(i).getSize();
 		
-		while(currentsize < size && i < reportnum)
+		int reportnum = reportCandidate.size();
+		int currentsize = 0;
+		for(int i = 0; i < reportnum; ++i)
 		{
-			advSet.add(reportCandidate.get(i).getReport_id());
-			i++;
-			if(i < reportnum)
-				currentsize += reportCandidate.get(i).getSize(); 
+			
+			if((currentsize += reportCandidate.get(i).getSize()) < size)
+			{
+				advSet.add(reportCandidate.get(i).getReport_id());
+			}
 			else
 				break;
+					
 		}
+		
 		return advSet;
 	}
 	
@@ -300,7 +299,11 @@ public class ReportBook {
 	
 	synchronized public long addReport(ReportItem report) {
 		//add a existing report received from other nodes
-		this.getReportList().add(report);				
+		this.getReportList().add(report);	
+		
+		//match the new report with all the queries in itself
+		
+		
 		return gRN;
 	}
 	

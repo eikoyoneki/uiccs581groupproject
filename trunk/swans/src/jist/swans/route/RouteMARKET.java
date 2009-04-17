@@ -76,12 +76,12 @@ public class RouteMARKET extends RouteGPSR
 		//store the query list from A
 		querybook.setOtherQueryList(msg1.getQuerybook().getQueryList());
 		
-		HashSet<Long> iUnknow = new HashSet<Long>();
+		HashSet<Long> iUnknow = new HashSet<Long>(); // IDSa - TSb
 		iUnknow = msg1.getreportCanOffer();
 		iUnknow.removeAll(reportbook.getTrackSet());
 		msg2.setReportUnknown(iUnknow);
 		
-		HashSet<Long> iOffer = new HashSet<Long>();
+		HashSet<Long> iOffer = new HashSet<Long>();//IDSb - IDSa
 		iOffer = reportbook.getReportIdList();
 		iOffer.removeAll(msg1.getreportCanOffer());
 
@@ -108,10 +108,8 @@ public class RouteMARKET extends RouteGPSR
 	{
 		reportbook.setSelfunknowIdList(msg2.getreportCanOffer());
 		reportbook.setNeighborWantIdList(msg2.getReportUnknown());
-		reportbook.getHitReport(querybook.getOtherQueryList());
 		//get the query book of B
 		querybook.setOtherQueryList(msg2.getQuerybook().getQueryList());
-		
 		
 		MARKETMsg3 msg3 = new MARKETMsg3();
 		msg3.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));

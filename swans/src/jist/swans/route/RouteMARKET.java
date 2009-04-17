@@ -140,6 +140,35 @@ public class RouteMARKET extends RouteGPSR
 		reportbook.mergeReport(msg4.getAnswers());
 	}
 
+	public MARKETADVMsg sendAdvMsg()
+	{
+		MARKETADVMsg advMsg = new MARKETADVMsg(reportbook.createAdvMsg(msgSize));
+		return advMsg;
+	}
+	
+	public MARKETREQMsg sendREQMsg(MARKETADVMsg advMsg)
+	{
+		MARKETREQMsg reqMsg = new MARKETREQMsg(reportbook.createREQMsg(advMsg.getAdvReportIds()));
+		return reqMsg;
+	}
+	
+	public MARKETRelayMsg sendRelayMsg(MARKETREQMsg reqMsg)
+	{
+		if(reqMsg.isReq())
+		{
+			MARKETRelayMsg relayMsg = new MARKETRelayMsg(reportbook.createRelayMsg());
+			return relayMsg;
+		}
+		else
+			return null;
+	}
+	
+	public void receiveRelayMsg(MARKETRelayMsg relayMsg)
+	{
+		reportbook.mergeReport(relayMsg.getRelayReports());
+	}
+	
+	
 	public QueryBook getQuerybook()
 	{
 		return querybook;

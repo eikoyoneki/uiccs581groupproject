@@ -10,7 +10,7 @@ public class QueryBook {
 	private LinkedList<QueryItem> QueryList;
 	private final int sizeLimit = 10; 
 	private HashSet<Long> queryIdSet = new HashSet<Long>();
-	private LinkedList<QueryItem> otherQueryList;
+	private LinkedList<QueryItem> otherQueryList;//queylist get from other node in 
 	
 	public QueryBook(){
 		QueryList = new LinkedList<QueryItem>();
@@ -38,6 +38,25 @@ public class QueryBook {
 		for(QueryItem query : queryneedSet)
 			this.addLast(query);
 	}
+	
+	public void updateBook()
+	{
+		HashSet<QueryItem> queryneedSet = new HashSet();
+		for(QueryItem query : otherQueryList)
+		{
+			if(!queryIdSet.contains(query.getQuery_id()))
+				queryneedSet.add(query);
+		}
+		int spaceneed = this.getSize() + queryneedSet.size() - sizeLimit;
+		if(spaceneed > 0)
+		{
+			for(int i = 0 ; i < spaceneed; ++i)
+				this.delFirst();
+		}
+		for(QueryItem query : queryneedSet)
+			this.addLast(query);
+	}
+	
 	
 	public int getSize()
 	{

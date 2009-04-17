@@ -2385,5 +2385,10 @@ public class RouteGPSR extends RouteGeo {
 	public int getProtocolId() throws Continuation {
 		return Constants.NET_PROTOCOL_GPSR;
 	}
+	
+	public NeighborTable getNeighbor()
+	{
+		return ntab_;
+	}
 }
 

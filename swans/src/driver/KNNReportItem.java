@@ -1,5 +1,6 @@
 package driver;
 
+import java.util.Calendar;
 import java.util.Random;
 
 public class KNNReportItem {
@@ -7,7 +8,7 @@ public class KNNReportItem {
 	
 	long report_id;
 	int home_node;
-	int time;
+	private Calendar createTime;
 	double x;
 	double y;
 	private int size;
@@ -31,18 +32,32 @@ public class KNNReportItem {
 	private int timeEncounteratNeighbor = 0;// number of times the report has been encountered at a neighbor fi
 
 	
-	public KNNReportItem(long report_id, int home_node, int time, double x,
+	public KNNReportItem(long report_id, int home_node, double x,
 			double y, int seed) {
 		
 		Random randomGenerator = new Random(seed);
 		this.report_id = report_id;
 		this.home_node = home_node;
-		this.time = time;
+		createTime = Calendar.getInstance();
 		this.x = x;
 		this.y = y;
 		this.size = randomGenerator.nextInt(10);
 	}
 	
+	
+
+	public KNNReportItem(int node, double x2, double y2) {
+		// TODO Auto-generated constructor stub
+		Random randomGenerator = new Random();
+		this.home_node = node;
+		createTime = Calendar.getInstance();
+		this.x = x2;
+		this.y = y2;
+		this.size = randomGenerator.nextInt(10);
+	}
+
+
+
 	public void increasefi()
 	{
 		timeEncounteratNeighbor++;
@@ -87,7 +102,7 @@ public class KNNReportItem {
 	// it's different for each node
 	public double match(KNNQueryItem q, double max_dist)
 	{
-		return Math.sqrt(Math.pow(q.getX(),2)+ Math.pow(q.getY(),2))/max_dist;
+		return (1.0 - Math.sqrt(Math.pow(q.getX(),2)+ Math.pow(q.getY(),2))/max_dist);
 		
 	}
 
@@ -99,12 +114,7 @@ public class KNNReportItem {
 	public void setHome_node(int home_node) {
 		this.home_node = home_node;
 	}
-	public int getTime() {
-		return time;
-	}
-	public void setTime(int time) {
-		this.time = time;
-	}
+
 	public double getX() {
 		return x;
 	}
@@ -222,4 +232,9 @@ public class KNNReportItem {
 		this.timeEncounteratNeighbor = timeEncounteratNeighbor;
 	}
 
+	public Calendar getCreateTime()
+	{
+		return createTime;
+	}
+	
 }

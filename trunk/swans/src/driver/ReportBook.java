@@ -16,7 +16,8 @@ public class ReportBook {
 	private HashSet<Long> reportIdList = new HashSet<Long>();
 	private MALENA supplytrainer;
 	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();//store the report content that should send to the encountered neighbor
-	private HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node 
+	private HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node
+	private Vector<Long> advSet = new Vector<Long>();
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -130,6 +131,7 @@ public class ReportBook {
 	public Vector<ReportItem> createBrokerMsg(int size)
 	{
 		Vector<ReportItem> reporttoSend = new Vector();
+		//if(this.getBookSize() > size)
 		rankReport();
 		int i = 0;
 		int reportnum = ReportList.size();
@@ -155,10 +157,11 @@ public class ReportBook {
 		return reporttoSend;
 	}
 	
-	public Vector<ReportItem> createRelayMsg(int size)
+	public Vector<ReportItem> createRelayMsg()
 	{
 		Vector<ReportItem> reporttoSend = new Vector();
-		for(Long id : neverTransmitSet)
+		
+		for(Long id : advSet)
 		{
 			for(ReportItem report : ReportList)
 			{
@@ -166,24 +169,51 @@ public class ReportBook {
 					reporttoSend.add(report);
 			}
 		}
-		rankReport(reporttoSend);
-		int i = 0;
-		int reportnum = neverTransmitSet.size();
-		int currentsize = reporttoSend.get(i).getSize();
-		while(currentsize < size && i < reportnum)
-		{
-			reporttoSend.add(reporttoSend.get(i));
-			neverTransmitSet.remove(reporttoSend.get(i).getReport_id());
-			i++;
-			if(i < reportnum)
-				currentsize += reporttoSend.get(i).getSize(); 
-			else
-				break;
-		}
+		
 		return reporttoSend;
 	}
 	
+	public Vector<Long> createAdvMsg(int size)
+	{
+		Vector<ReportItem> reportCandidate = new Vector();
+		for(Long id : neverTransmitSet)
+		{
+			for(ReportItem report : ReportList)
+			{
+				if(report.getReport_id() == id)
+					reportCandidate.add(report);
+			}
+		}
+		rankReport(reportCandidate);
+		int i = 0;
+		int reportnum = neverTransmitSet.size();
+		int currentsize = reportCandidate.get(i).getSize();
+		
+		while(currentsize < size && i < reportnum)
+		{
+			advSet.add(reportCandidate.get(i).getReport_id());
+			i++;
+			if(i < reportnum)
+				currentsize += reportCandidate.get(i).getSize(); 
+			else
+				break;
+		}
+		return advSet;
+	}
 	
+	public boolean createREQMsg(Vector<Long> advMsg)
+	{
+		boolean req = false;
+		for(Long reportId : advMsg)
+		{
+			if(!trackSet.contains(reportId))
+			{
+				req = true;
+				break;
+			}
+		}		
+		return req;
+	}
 	
 	/**
 	 * add the reports received from other nodes in the msg
@@ -193,13 +223,15 @@ public class ReportBook {
 	 */
 	public void mergeReport(Vector<ReportItem> reportSet)
 	{
-		rankReport();
+		
 		int requiredsize = 0;
 		for(ReportItem report : reportSet)
 		{
 			requiredsize += report.getSize();
 		}
 
+		if(getBookSize() + requiredsize > sizeLimit)
+			this.rankReport();
 		//remove the low priority reports and 
 		//get enough space for the new reports
 		while(getBookSize() + requiredsize > sizeLimit)

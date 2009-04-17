@@ -3,6 +3,7 @@ package driver;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Vector;
 
 public class KNNReportBook {
@@ -15,6 +16,8 @@ public class KNNReportBook {
 	private HashSet<Long> reportIdList = new HashSet<Long>();
 	private MALENA supplytrainer;
 	private HashSet<KNNReportItem> answerSet = new HashSet<KNNReportItem>();
+	private HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node
+	private Vector<Long> advSet = new Vector<Long>();
 	
 	public KNNReportBook(){
 		ReportList = new Vector<KNNReportItem>();
@@ -24,7 +27,7 @@ public class KNNReportBook {
 		ReportList = book.getReportList();
 	}
 	
-	//compute the max distance
+	//compute the max distance in the reportDB
 	public double computeMaxDist(KNNQueryItem q)
 	{
 		double max = 0;
@@ -50,7 +53,7 @@ public class KNNReportBook {
 			double degree = qi.match(q, max_dist);
 			if(true)
 			{
-				answerSet.add(qi);
+				answerSet.add(qi);// if match B's query, this report is a candidate in answer set
 				for(KNNReportItem otherqi : ReportList)
 				{
 					if(otherqi.getReport_id() != reportId)
@@ -121,6 +124,7 @@ public class KNNReportBook {
 			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
 				reporttoSend.add(reportsCandidate.get(i));
+				neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
 				i++;
 				if(i < reportnum)
 					currentsize += reportsCandidate.get(i).getSize(); 
@@ -148,6 +152,7 @@ public class KNNReportBook {
 			if(neighborWantIdList.contains(reportsCandidate.get(i).getReport_id()))
 			{
 				reporttoSend.add(reportsCandidate.get(i));
+				neverTransmitSet.remove(reportsCandidate.get(i).getReport_id());
 				i++;
 				if(i < reportnum)
 					currentsize += reportsCandidate.get(i).getSize(); 
@@ -160,6 +165,64 @@ public class KNNReportBook {
 		return reporttoSend;
 	}
 	
+	public Vector<KNNReportItem> createRelayMsg()
+	{
+		Vector<KNNReportItem> reporttoSend = new Vector<KNNReportItem>();
+		
+		for(Long id : advSet)
+		{
+			for(KNNReportItem report : ReportList)
+			{
+				if(report.getReport_id() == id)
+					reporttoSend.add(report);
+			}
+		}
+		
+		return reporttoSend;
+	}
+	
+	public Vector<Long> createAdvMsg(int size)
+	{
+		Vector<KNNReportItem> reportCandidate = new Vector<KNNReportItem>();
+		for(Long id : neverTransmitSet)
+		{
+			for(KNNReportItem report : ReportList)
+			{
+				if(report.getReport_id() == id)
+					reportCandidate.add(report);
+			}
+		}
+		rankReport(reportCandidate);
+		int i = 0;
+		int reportnum = neverTransmitSet.size();
+		int currentsize = reportCandidate.get(i).getSize();
+		
+		while(currentsize < size && i < reportnum)
+		{
+			advSet.add(reportCandidate.get(i).getReport_id());
+			i++;
+			if(i < reportnum)
+				currentsize += reportCandidate.get(i).getSize(); 
+			else
+				break;
+		}
+		return advSet;
+	}
+	
+	public boolean createREQMsg(Vector<Long> advMsg)
+	{
+		boolean req = false;
+		for(Long reportId : advMsg)
+		{
+			if(!trackSet.contains(reportId))
+			{
+				req = true;
+				break;
+			}
+		}		
+		return req;
+	}
+	
 	/**
 	 * add the reports received from other nodes in the msg
 	 * how to rank the new reports added, we defined our self
@@ -168,13 +231,15 @@ public class KNNReportBook {
 	 */
 	public void mergeReport(Vector<KNNReportItem> reportSet)
 	{
-		rankReport();
+		//rankReport();
 		int requiredsize = 0;
 		for(KNNReportItem report : reportSet)
 		{
 			requiredsize += report.getSize();
 		}
 
+		if(getBookSize() + requiredsize > sizeLimit)
+			this.rankReport();
 		//remove the low priority reports and 
 		//get enough space for the new reports
 		while(getBookSize() + requiredsize > sizeLimit)
@@ -187,6 +252,8 @@ public class KNNReportBook {
 			report.refresh();
 			ReportList.add(report);
 			trackSet.add(report.getReport_id());
+			reportIdList.add(report.getReport_id());
+			neverTransmitSet.add(report.getReport_id());
 		}
 		
 	}
@@ -214,45 +281,30 @@ public class KNNReportBook {
 	synchronized public void delLastReport()
 	{
 		int i = ReportList.size();
+		reportIdList.remove(ReportList.get(i - 1).getReport_id());
+		neverTransmitSet.remove(ReportList.get(i - 1).getReport_id());
 		ReportList.remove(i - 1);
 	}
+		
 	
-	
-	synchronized public boolean delReport(ReportItem r){
-		long rid= r.getReport_id();
-		return delReport(rid);		
-	}
-	
-	synchronized public boolean delReport(long r_id ){
-		//delete an report
-		KNNReportItem reportItem = null;
-		Iterator<KNNReportItem> it=null;
-		it = this.getReportList().iterator();
-		while(it.hasNext())
-		{
-			reportItem =  it.next();
-
-			if(reportItem.getReport_id() == r_id)
-			{
-				//this is the order we should remove
-				it.remove();
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	synchronized public long addReport(int home_node, int time, double x,
-			double y, int seed){
+	synchronized public long addReport(int node){
 		//add a new report
 		//Every new report have to be added using this method
 		//to ensure its id is unique
+		double x = getNodeLocationX(node); //still need to be implemented
+		double y = getNodeLocationY(node);
 		
-		KNNReportItem report = new KNNReportItem(++gRN, home_node, time, x,y, seed);
+		KNNReportItem report = new KNNReportItem(node,x,y);
+		report.setReport_id(++gRN);
+		report.setHome_node(node);
+		trackSet.add(report.getReport_id());
+		reportIdList.add(report.getReport_id());
+		neverTransmitSet.add(report.getReport_id());
 		
 		return addReport(report);
+		
+		
 	}
-	
 	synchronized public long addReport(KNNReportItem report) {
 		//add a existing report received from other nodes
 		this.getReportList().add(report);				

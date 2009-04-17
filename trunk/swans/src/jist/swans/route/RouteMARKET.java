@@ -189,7 +189,10 @@ public class RouteMARKET extends RouteGPSR
 		this.reportbook = reportbook;
 	}
 	
-	
+	public NeighborTable getNeighbor()
+	{
+		return ntab_;
+	}
 
 
 }

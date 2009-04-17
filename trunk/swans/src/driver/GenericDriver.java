@@ -76,11 +76,13 @@ import jist.swans.radio.RadioInfo;
 import jist.swans.radio.RadioNoise;
 import jist.swans.radio.RadioNoiseAdditive;
 import jist.swans.radio.RadioNoiseIndep;
+import jist.swans.route.IDPair;
 import jist.swans.route.RouteAodv;
 import jist.swans.route.RouteDsr_Ns2;
 import jist.swans.route.RouteDsr;
 import jist.swans.route.RouteGPSR;
 import jist.swans.route.RouteInterface;
+import jist.swans.route.RouteGPSR.NeighborEntry;
 import jist.swans.route.geo.Ideal;
 import jist.swans.trans.TransUdp;
 
@@ -803,22 +805,51 @@ public class GenericDriver {
                 }
             }
         } // end if nodes
-        
 
-
-        if (je.measureMemory) { // get memory usage every 5 %
+        if (je.measureMemory || true) { // get memory usage every 5 %
 
             int numTotalIters = 20;
             long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
+            delayInterval = 10;
             long currentTime = 0;
 
             for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {
                             long baseMem = jist.runtime.Util.getUsedMemory();
+                            System.out.println("aab");
                             //            long threadMem = Visualizer.getActiveInstance().getUsedMemory();
                             memoryConsumption.add(new Long(baseMem));
-                            System.out.println("hello world, t = " + JistAPI.getTime());
+                        }
+                    }, currentTime);
+
+                currentTime += delayInterval;
+            }
+        }
+        
+        if (true) { 
+
+            int numTotalIters = 20;
+            long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
+            long currentTime = 0;
+            
+            NeighborHistory.init(nodes.size()); // initialize neighbor history
+
+            for (int j = 0; j < numTotalIters; j++) {
+                JistAPI.runAt(new Runnable() {
+                        public void run() {
+                            // get new neighbor list
+                        	Vector addedNeighbor = getNewNeighborList(nodes);
+                        	
+                        	// for each pair, call xiaowen's interface
+                        	for(int j = 0; j < addedNeighbor.size(); j++)
+                        	{
+                        		IDPair p = (IDPair) addedNeighbor.get(j);
+                        		int src = p.part1;
+                        		int dst = p.part2;
+                        		
+                        		/* to do: call xiaowen's interface */
+                        	}
                         }
                     }, currentTime);
 
@@ -827,6 +858,41 @@ public class GenericDriver {
         }
     } // buildField
 
+    /**
+     * @author yuchen
+     * @param nodes the node list
+     */
+    private static Vector getNewNeighborList(Vector nodes)
+    {
+    	// get new neighbor list
+    	Vector addedNeighbor = new Vector(); // new neighbor list
+    	
+    	for(int j = 0; j < nodes.size(); j++)
+    	{
+    		RouteGPSR ri = (RouteGPSR) nodes.get(j);
+    		Vector newAdded = NeighborHistory.findNewNeighbor(j, ri.getNeighbor());
+    		for(int k = 0; k < newAdded.size(); k++)
+    		{
+    			int id = macAddrToID(((NeighborEntry)newAdded.get(k)).macAddr, nodes);
+    			IDPair idp = new IDPair(j, id);
+    			if(!addedNeighbor.contains(idp))
+    			{
+    				addedNeighbor.add(idp);
+    			}
+    		}
+    	}
+    	
+    	for(int j = 0; j < nodes.size(); j++)
+    	{
+    		// update neighbor history
+    		RouteGPSR ri = (RouteGPSR) nodes.get(j);
+    		NeighborHistory.update(j, ri.getNeighbor());
+    	}
+    	
+    	return addedNeighbor;
+    }
+    
+    
     /**
      * Loads patterns for mobility around fixed, closed routes.
      * @param smod the street mobility object
@@ -964,9 +1030,20 @@ public class GenericDriver {
 
             JistAPI.sleep(delayInterval +
                 (long) (SEND_JITTER * Constants.MICRO_SECOND * Constants.random.nextDouble()));
-            System.out.println("hello world, t = " + JistAPI.getTime());
             currentTime += delayInterval;
         }
+    }
+    
+    
+    public static int macAddrToID(MacAddress addr, Vector nodes)
+    {
+    	for(int i = 0; i < nodes.size(); i++)
+    	{
+    		RouteGPSR rg = (RouteGPSR)nodes.get(i);
+    		if(rg.getMacAddress().equals(addr))
+    			return i;
+    	}
+    	return -1;
     }
 
     /**

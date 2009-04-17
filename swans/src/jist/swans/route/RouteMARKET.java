@@ -158,6 +158,10 @@ public class RouteMARKET extends RouteGPSR
 		
 		//update the query database
 		querybook.updateBook();
+		//merge the report
+		reportbook.mergeReport(msg3.getAnswers());
+		if(msg3.getBrokerReport().size() != 0)
+			reportbook.mergeReport(msg3.getBrokerReport());
 
 		return msg4;
 		
@@ -171,6 +175,8 @@ public class RouteMARKET extends RouteGPSR
 	public void receiveMSg4(MARKETMsg4 msg4)
 	{
 		reportbook.mergeReport(msg4.getAnswers());
+		if(msg4.getBrokerReport().size() != 0)
+			reportbook.mergeReport(msg4.getBrokerReport());
 		querybook.updateBook();
 	}
 

@@ -1,58 +1,65 @@
 package driver;
 
 public class Evaluation {
-	private int total_received_report_no;
-	private int total_received_from_neigbor_report;
-	private int total_answers;
+	private double total_report_received=0;
+	private double match_throuhput=0; //total_report_received_from_neigbors
+					//the total number of reports that are “correctly” transmitted	
+	private double total_answers=0; // total number of answers ever generated in the system
+	private double total_response_time=0;
+	private double total_answered_query=0;
+    //those parameters are double not int because we need consider KNN
 	
 	
-	private double recall;         //recall = match_throughput/total_answer
-	private double match_throughput;  //the total number of reports that are “correctly” transmitted
-	private double match_ratio;    //precision = match_throughput/total_received_report_no
-	private double response_time;   //	
-	public int getTotal_received_report_no() {
-		return total_received_report_no;
+	//private double recall=0;         //recall = match_throughput/total_answers
+	//private double match_ratio=0;    //precision = match_throughput/total_report_received
+	//private double avg_response_time=0;  //total_response_time/total_answered_query	
+	
+	public double getTotal_report_received() {
+		return total_report_received;
 	}
-	public void setTotal_received_report_no(int total_received_report_no) {
-		this.total_received_report_no = total_received_report_no;
+	public void increaseTotal_report_received(double x) {
+		this.total_report_received += x;
 	}
-	public int getTotal_received_from_neigbor_report() {
-		return total_received_from_neigbor_report;
+	public double getMatch_throuhput() {
+		return match_throuhput;
 	}
-	public void setTotal_received_from_neigbor_report(
-			int total_received_from_neigbor_report) {
-		this.total_received_from_neigbor_report = total_received_from_neigbor_report;
+	public void setMatch_throuhput(double x) {
+		this.match_throuhput += x;
 	}
-	public int getTotal_answers() {
+	public double getTotal_answers() {
 		return total_answers;
 	}
-	public void setTotal_answers(int total_answers) {
-		this.total_answers = total_answers;
+	public void increaseTotal_answers(double x) {
+		this.total_answers += x;
+	}
+	public double getTotal_response_time() {
+		return total_response_time;
+	}
+	public void increaseTotal_response_time(double x) {
+		this.total_response_time += x;
+	}
+	public double getTotal_answered_query() {
+		return total_answered_query;
+	}
+	public void increaseTotal_answered_query(double x) {
+		this.total_answered_query += x;
 	}
 	public double getRecall() {
-		return recall;
+		return match_throuhput /total_answers;
 	}
-	public void setRecall(double recall) {
-		this.recall = recall;
-	}
-	public double getMatch_throughput() {
-		return match_throughput;
-	}
-	public void setMatch_throughput(double match_throughput) {
-		this.match_throughput = match_throughput;
-	}
+
 	public double getMatch_ratio() {
-		return match_ratio;
+		return match_throuhput/total_answers;
 	}
-	public void setMatch_ratio(double match_ratio) {
-		this.match_ratio = match_ratio;
-	}
+
 	public double getResponse_time() {
-		return response_time;
+		
+		return total_response_time/total_answered_query;
 	}
-	public void setResponse_time(double response_time) {
-		this.response_time = response_time;
-	}
+
+	
+	
+	
 	
 
 }

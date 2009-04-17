@@ -2390,5 +2390,10 @@ public class RouteGPSR extends RouteGeo {
 	{
 		return ntab_;
 	}
+	
+	public MacAddress getMacAddress()
+	{
+		return macAddr;
+	}
 }
 

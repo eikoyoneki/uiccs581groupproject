@@ -326,7 +326,10 @@ public interface Mobility
     public void next(FieldInterface f, Integer id, Location loc, MobilityInfo info)
     {
     	if (Visualizer.getActiveInstance()!=null) 
+    	{
     		Visualizer.getActiveInstance().updateTime(JistAPI.getTime());
+    		//System.out.println("update time" + JistAPI.getTime() + "node id " + id);
+    	}
         
     	Location brg = null;
       if(Main.ASSERT) Util.assertion(loc.inside(bounds));

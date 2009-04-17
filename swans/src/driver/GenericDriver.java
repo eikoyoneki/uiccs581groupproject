@@ -803,6 +803,8 @@ public class GenericDriver {
                 }
             }
         } // end if nodes
+        
+
 
         if (je.measureMemory) { // get memory usage every 5 %
 
@@ -816,6 +818,7 @@ public class GenericDriver {
                             long baseMem = jist.runtime.Util.getUsedMemory();
                             //            long threadMem = Visualizer.getActiveInstance().getUsedMemory();
                             memoryConsumption.add(new Long(baseMem));
+                            System.out.println("hello world, t = " + JistAPI.getTime());
                         }
                     }, currentTime);
 
@@ -961,6 +964,7 @@ public class GenericDriver {
 
             JistAPI.sleep(delayInterval +
                 (long) (SEND_JITTER * Constants.MICRO_SECOND * Constants.random.nextDouble()));
+            System.out.println("hello world, t = " + JistAPI.getTime());
             currentTime += delayInterval;
         }
     }

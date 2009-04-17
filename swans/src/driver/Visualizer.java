@@ -2071,6 +2071,7 @@ public class Visualizer implements VisualizerInterface
      */
     public void updateTime(long time) {
         timeLabel.setTime(time);
+        //System.out.println("update time");
     }
     
     /* (non-Javadoc)

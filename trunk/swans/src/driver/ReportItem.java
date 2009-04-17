@@ -34,12 +34,14 @@ public class ReportItem
 	{
 		Random randomGenerator = new Random(seed);
 		value = Math.atan(randomGenerator.nextDouble());
+		size = randomGenerator.nextInt(10);
 	}
 
 	public ReportItem()
 	{
 		Random randomGenerator = new Random();
 		value = Math.atan(randomGenerator.nextDouble());
+		size = randomGenerator.nextInt(10);
 	}
 
 	public ReportItem(long id, int node, int seed)

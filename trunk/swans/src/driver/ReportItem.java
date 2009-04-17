@@ -1,6 +1,7 @@
 //Wenxuan Gao, spring 2009
 package driver;
 
+import java.util.Calendar;
 import java.util.Random;
 
 public class ReportItem
@@ -9,6 +10,7 @@ public class ReportItem
 	private int home_node;
 	private int size;
 	private double value;
+	private Calendar createTime;
 
 	private int numOfHit = 0; // number of hit for this report in the certain node
 	private int numOfOtherHit = 0; // number of hit for other report in the node after the hit of itself
@@ -44,12 +46,14 @@ public class ReportItem
 	{
 		// super();
 		// check the boundary condition here
+		
 		Random randomGenerator = new Random(seed);
 		value = Math.atan(randomGenerator.nextDouble());
 		size = randomGenerator.nextInt(10);
 		this.report_id = id;
 		this.home_node = node;
-
+		createTime = Calendar.getInstance();
+		
 	}
 
 	/**
@@ -71,10 +75,7 @@ public class ReportItem
 	}
 	
 	
-	public void increasefi()
-	{
-		timeEncounteratNeighbor++;
-	}
+
 
 	/**
 	 * when the nodes report transfered to other nodes
@@ -93,6 +94,11 @@ public class ReportItem
 		freq2 = 0;
 	}
 
+	public void increasefi()
+	{
+		timeEncounteratNeighbor++;
+	}
+	
 	public void increaseOtherHit()
 	{
 		numOfOtherHit++;
@@ -271,7 +277,11 @@ public class ReportItem
 	{
 		this.timeEncounteratNeighbor = timeEncounteratNeighbor;
 	}
-	
+
+	public Calendar getCreateTime()
+	{
+		return createTime;
+	}
 	
 
 }

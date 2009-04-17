@@ -15,16 +15,16 @@ public class ReportBook {
 	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
 	private HashSet<Long> reportIdList = new HashSet<Long>();
 	private MALENA supplytrainer;
-	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();
+	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();//store the report content that should send to the encountered neighbor
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
 	}
+	
 	public ReportBook(ReportBook book){
 		gRN = book.gRN;
 		ReportList = book.getReportList();
 	}
-
 
 	/**
 	 * match a queryitem and update the number of hit if matched
@@ -59,9 +59,6 @@ public class ReportBook {
 			}
 		}
 	}
-	
-	
-	
 
 	/**
 	 * compute the supply of all the reports

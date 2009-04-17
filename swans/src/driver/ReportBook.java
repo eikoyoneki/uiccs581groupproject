@@ -8,6 +8,7 @@ import java.util.Vector;
 
 public class ReportBook {
 	static private long gRN = 0;//global report number control
+	
 	private Vector<ReportItem> ReportList;
 	private final int sizeLimit = 10;
 	private HashSet<Long> neighborWantIdList = new HashSet<Long>();//what neighbor want IDSa - TSb
@@ -281,7 +282,7 @@ public class ReportBook {
 	
 	
 	
-	synchronized public long addReport(int node){
+	synchronized public long addReport(int node, QueryBook querybook){
 		//add a new report
 		//Every new report have to be added using this method
 		//to ensure its id is unique
@@ -291,20 +292,36 @@ public class ReportBook {
 		trackSet.add(report.getReport_id());
 		reportIdList.add(report.getReport_id());
 		neverTransmitSet.add(report.getReport_id());
-		
-		return addReport(report);
+		this.getReportList().add(report);
+		return gRN;
 		
 		
 	}
 	
-	synchronized public long addReport(ReportItem report) {
-		//add a existing report received from other nodes
-		this.getReportList().add(report);	
-		
-		//match the new report with all the queries in itself
-		
-		
-		return gRN;
+	
+	
+	public void queryNewReport(ReportItem report, QueryBook querybook)
+	{
+		for(QueryItem query : querybook.getQueryList())
+		{
+			if(report.match(query))
+			{
+				for(ReportItem otherqi : ReportList)
+				{
+					if(otherqi.getReport_id() != report.getReport_id())
+					{
+						otherqi.increaseOtherHit();
+						otherqi.increaseOtherHit2();
+					}
+				}
+				
+				report.setNumOfOtherHit(0);
+				report.increaseHit();
+				report.setNumOfOtherHit2(0);
+				report.increaseHit2();
+				
+			}
+		}
 	}
 	
 	public boolean isReportExisting(long r_id) {

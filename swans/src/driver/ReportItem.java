@@ -27,8 +27,8 @@ public class ReportItem
 	
 	private double demand = 0;
 	private double supply = 0;
-	private int age;
-	private int timeEncounteratNeighbor;// number of times the report has been encountered at a neighbor fi
+	private int age = 0;
+	private int timeEncounteratNeighbor = 0;// number of times the report has been encountered at a neighbor fi
 
 	public ReportItem(int seed)
 	{

@@ -81,6 +81,7 @@ import jist.swans.route.RouteAodv;
 import jist.swans.route.RouteDsr_Ns2;
 import jist.swans.route.RouteDsr;
 import jist.swans.route.RouteGPSR;
+import jist.swans.route.RouteMARKET;
 import jist.swans.route.RouteInterface;
 import jist.swans.route.RouteGPSR.NeighborEntry;
 import jist.swans.route.geo.Ideal;
@@ -806,11 +807,10 @@ public class GenericDriver {
             }
         } // end if nodes
 
-        if (je.measureMemory || true) { // get memory usage every 5 %
+        if (je.measureMemory) { // get memory usage every 5 %
 
             int numTotalIters = 20;
             long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
-            delayInterval = 10;
             long currentTime = 0;
 
             for (int j = 0; j < numTotalIters; j++) {
@@ -827,35 +827,35 @@ public class GenericDriver {
             }
         }
         
-        if (true) { 
-
-            int numTotalIters = 20;
-            long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
+        
+        System.out.println("a thread is generated, monitering the neighbor");
+        while (true) {
+        	long delayInterval = 1000;
             long currentTime = 0;
-            
-            NeighborHistory.init(nodes.size()); // initialize neighbor history
-
-            for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {
+                        	
                             // get new neighbor list
                         	Vector addedNeighbor = getNewNeighborList(nodes);
-                        	
+                        	System.out.println("thread should be running");
                         	// for each pair, call xiaowen's interface
                         	for(int j = 0; j < addedNeighbor.size(); j++)
                         	{
+                        		System.out.println("try to communicate");
                         		IDPair p = (IDPair) addedNeighbor.get(j);
                         		int src = p.part1;
                         		int dst = p.part2;
+                        		RouteMARKET sourceNode = (RouteMARKET)nodes.get(src);
+                        		RouteMARKET destinationNode = (RouteMARKET)nodes.get(dst);
+                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
                         		
-                        		/* to do: call xiaowen's interface */
                         	}
                         }
                     }, currentTime);
 
                 currentTime += delayInterval;
             }
-        }
+        
     } // buildField
 
     /**

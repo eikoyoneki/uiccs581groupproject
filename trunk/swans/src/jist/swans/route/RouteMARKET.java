@@ -46,6 +46,15 @@ public class RouteMARKET extends RouteGPSR
 		
 	}
 	
+	public void generateNewReport()
+	{
+		reportbook.addReport(this.selfId, querybook);
+	}
+	
+	public void generateNewQuery()
+	{
+		querybook.addQuery();
+	}
 	
 	/**
 	 * A send the first msg to the new neighbor B

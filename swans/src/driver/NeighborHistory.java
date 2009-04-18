@@ -25,7 +25,12 @@ public class NeighborHistory
 	public static Vector findNewNeighbor(int i, NeighborTable newTab)
 	{
 		Vector results = new Vector();
-		NeighborTable old = (NeighborTable)history.get(i);
+		NeighborTable old;
+		if(history == null || history.size() == 0)
+		{
+			old = null;
+		}
+		old = (NeighborTable)history.get(i);
 		for(int j = 0; j < newTab.size(); j++)
 		{
 			NeighborEntry ne = (NeighborEntry) newTab.get(j);

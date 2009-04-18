@@ -106,6 +106,8 @@ public class GenericDriver {
     private static final int SEND_JITTER = 100;
     private static Ideal locDB = null;
     static int idUdp = 0;
+    
+    public static Vector gpsrNodes = new Vector();
 
     /**
     * Add node to the field and start it.
@@ -291,6 +293,7 @@ public class GenericDriver {
             gpsr.setNetEntity(net.getProxy());
             gpsr.getProxy().start();
             route = gpsr.getProxy();
+            gpsrNodes.add(gpsr);
 
             //gpsr.setStats(zrpStats);
             break;
@@ -829,14 +832,18 @@ public class GenericDriver {
         
         
         System.out.println("a thread is generated, monitering the neighbor");
-        while (true) {
-        	long delayInterval = 1000;
-            long currentTime = 0;
+        int numTotalIters = 20;
+        long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
+        long currentTime = 0;
+        
+        NeighborHistory.init(gpsrNodes.size());
+
+        for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {
                         	
                             // get new neighbor list
-                        	Vector addedNeighbor = getNewNeighborList(nodes);
+                        	Vector addedNeighbor = getNewNeighborList();
                         	System.out.println("thread should be running");
                         	// for each pair, call xiaowen's interface
                         	for(int j = 0; j < addedNeighbor.size(); j++)
@@ -845,9 +852,10 @@ public class GenericDriver {
                         		IDPair p = (IDPair) addedNeighbor.get(j);
                         		int src = p.part1;
                         		int dst = p.part2;
-                        		RouteMARKET sourceNode = (RouteMARKET)nodes.get(src);
-                        		RouteMARKET destinationNode = (RouteMARKET)nodes.get(dst);
-                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
+                        		System.out.println("src: " + src + " , dst: " + dst);
+//                        		RouteMARKET sourceNode = (RouteMARKET)gpsrNodes.get(src);
+//                        		RouteMARKET destinationNode = (RouteMARKET)gpsrNodes.get(dst);
+//                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
                         		
                         	}
                         }
@@ -862,18 +870,18 @@ public class GenericDriver {
      * @author yuchen
      * @param nodes the node list
      */
-    private static Vector getNewNeighborList(Vector nodes)
+    private static Vector getNewNeighborList()
     {
     	// get new neighbor list
     	Vector addedNeighbor = new Vector(); // new neighbor list
     	
-    	for(int j = 0; j < nodes.size(); j++)
+    	for(int j = 0; j < gpsrNodes.size(); j++)
     	{
-    		RouteGPSR ri = (RouteGPSR) nodes.get(j);
+    		RouteGPSR ri = (RouteGPSR) gpsrNodes.get(j);
     		Vector newAdded = NeighborHistory.findNewNeighbor(j, ri.getNeighbor());
     		for(int k = 0; k < newAdded.size(); k++)
     		{
-    			int id = macAddrToID(((NeighborEntry)newAdded.get(k)).macAddr, nodes);
+    			int id = macAddrToID(((NeighborEntry)newAdded.get(k)).macAddr, gpsrNodes);
     			IDPair idp = new IDPair(j, id);
     			if(!addedNeighbor.contains(idp))
     			{
@@ -882,10 +890,10 @@ public class GenericDriver {
     		}
     	}
     	
-    	for(int j = 0; j < nodes.size(); j++)
+    	for(int j = 0; j < gpsrNodes.size(); j++)
     	{
     		// update neighbor history
-    		RouteGPSR ri = (RouteGPSR) nodes.get(j);
+    		RouteGPSR ri = (RouteGPSR) gpsrNodes.get(j);
     		NeighborHistory.update(j, ri.getNeighbor());
     	}
     	

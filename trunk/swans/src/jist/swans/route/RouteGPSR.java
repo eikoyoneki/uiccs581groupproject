@@ -2456,9 +2456,12 @@ public class RouteGPSR extends RouteGeo {
 		//store the query list from A
 		querybook.setOtherQueryList(msg1.getQuerybook().getQueryList());
 		
+		
+		
 		HashSet<Long> iUnknow = new HashSet<Long>(); // IDSa - TSb
 		iUnknow = msg1.getreportCanOffer();
 		iUnknow.removeAll(reportbook.getTrackSet());
+		reportbook.setSelfunknowIdList(iUnknow);
 		msg2.setReportUnknown(iUnknow);
 		
 		HashSet<Long> iOffer = new HashSet<Long>();//IDSb - IDSa
@@ -2491,6 +2494,8 @@ public class RouteGPSR extends RouteGeo {
 		//get the query book of B
 		querybook.setOtherQueryList(msg2.getQuerybook().getQueryList());
 		reportbook.getHitReport(querybook.getOtherQueryList());
+		
+		reportbook.computeSupply();
 		
 		MARKETMsg3 msg3 = new MARKETMsg3();
 		msg3.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));

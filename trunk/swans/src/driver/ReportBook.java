@@ -15,7 +15,7 @@ public class ReportBook {
 	private HashSet<Long> selfunknowIdList = new HashSet<Long>(); //what the neighbor can offer IDSb - IDSa
 	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
 	private HashSet<Long> reportIdList = new HashSet<Long>();
-	private MALENA supplytrainer;
+	private MALENA supplytrainer = new MALENA();
 	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();//store the report content that should send to the encountered neighbor
 	private HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node
 	private Vector<Long> advSet = new Vector<Long>();
@@ -258,12 +258,12 @@ public class ReportBook {
 	
 	public void rankReport()
 	{
-		CacheScheme.LRU1(this.getReportList());
+		CacheScheme.LFU1(this.getReportList());
 	}
 	
 	public void rankReport(Vector<ReportItem> reports)
 	{
-		CacheScheme.LRU1(reports);
+		CacheScheme.LFU1(reports);
 	}
 	
 	public int getBookSize()
@@ -297,6 +297,7 @@ public class ReportBook {
 		reportIdList.add(report.getReport_id());
 		neverTransmitSet.add(report.getReport_id());
 		this.getReportList().add(report);
+		queryNewReport(report, querybook);
 		return gRN;
 		
 		
@@ -318,7 +319,7 @@ public class ReportBook {
 						otherqi.increaseOtherHit2();
 					}
 				}
-				
+				Evaluation.increaseTotal_answers(1);
 				report.setNumOfOtherHit(0);
 				report.increaseHit();
 				report.setNumOfOtherHit2(0);

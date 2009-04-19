@@ -9,6 +9,7 @@ public class QueryItem {
 	double center;
 	double range;
 	
+	
 	public QueryItem(long query_id, int node) 
 	{ 
 		this.query_id = query_id;

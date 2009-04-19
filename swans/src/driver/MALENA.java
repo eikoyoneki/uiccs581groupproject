@@ -71,6 +71,8 @@ public class MALENA
 	
 	public void bayesianTrain(ReportBook reportbook)
 	{
+		
+		normalizeExample();
 		for(Calendar c : trainExample.keySet())
 		{
 			for(Example example : trainData)
@@ -98,7 +100,8 @@ public class MALENA
 		}
 		int num = tdiff.size() + 1;
 		int div = trainExample.size();
-		div = div / num;
+		if(div > num)
+			div = div / num;
 		int i = 0;
 		int age = 0;
 		for(Calendar c : trainExample.keySet())

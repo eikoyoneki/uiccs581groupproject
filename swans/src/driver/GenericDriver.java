@@ -882,6 +882,8 @@ public class GenericDriver {
                         	}
                         	
                         	addNewReport();
+                        	//addNewQuery();
+                        	
                         }
                     }, currentTime);
 
@@ -915,6 +917,8 @@ public class GenericDriver {
                         		System.out.println("src: " + sourceNode.getSelfId()
                         				+ " , dst: " + destinationNode.getSelfId());
                         		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
+                        		
+                        		
                         		
                         	}
                         	
@@ -1106,6 +1110,15 @@ public class GenericDriver {
     	{
     		gpsr.generateNewReport();
     	}
+    }
+    
+    public static void addNewQuery()
+    {
+    	Random randomGenerator = new Random();
+    	int querynode = randomGenerator.nextInt(gpsrNodes.size());
+    	RouteGPSR gpsr = gpsrNodes.get(querynode);
+    	gpsr.generateNewQuery();
+    	
     }
     
     public static int macAddrToID(MacAddress addr, Vector nodes)

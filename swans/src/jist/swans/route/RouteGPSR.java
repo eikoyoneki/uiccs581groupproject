@@ -2495,7 +2495,7 @@ public class RouteGPSR extends RouteGeo {
 		querybook.setOtherQueryList(msg2.getQuerybook().getQueryList());
 		reportbook.getHitReport(querybook.getOtherQueryList());
 		
-		reportbook.computeSupply();
+		reportbook.computeSupply(querybook);
 		
 		MARKETMsg3 msg3 = new MARKETMsg3();
 		msg3.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));

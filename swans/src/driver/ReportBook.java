@@ -73,8 +73,9 @@ public class ReportBook {
 	 * compute the supply of all the reports
 	 * after knowing the neighborWantIdList in communication step 2
 	 */
-	public void computeSupply()
+	public void computeSupply(QueryBook querybook)
 	{
+		computeDemand(querybook);
 		for(ReportItem report : ReportList)
 		{
 			if(!neighborWantIdList.contains(report.getReport_id()))
@@ -88,6 +89,14 @@ public class ReportBook {
 			}
 		}
 		supplytrainer.bayesianTrain(this);
+	}
+	
+	public void computeDemand(QueryBook querybook)
+	{
+		for(ReportItem report : ReportList)
+		{
+			report.computeDemand(querybook);
+		}
 	}
 	
 	public void getHitReport(LinkedList<QueryItem> otherQueryList)
@@ -258,12 +267,12 @@ public class ReportBook {
 	
 	public void rankReport()
 	{
-		CacheScheme.LFU1(this.getReportList());
+		CacheScheme.GRS(this.getReportList());
 	}
 	
 	public void rankReport(Vector<ReportItem> reports)
 	{
-		CacheScheme.LFU1(reports);
+		CacheScheme.GRS(reports);
 	}
 	
 	public int getBookSize()

@@ -2395,5 +2395,10 @@ public class RouteGPSR extends RouteGeo {
 	{
 		return macAddr;
 	}
+	
+	public int getSelfId()
+	{
+		return this.selfId;
+	}
 }
 

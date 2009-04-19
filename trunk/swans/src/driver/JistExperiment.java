@@ -251,6 +251,7 @@ public class JistExperiment implements JistAPI.DoNotRewrite
 	public double lpexp_ = RouteGPSR.GPSR_PPROBE_EXP;		// perimeter probe generation timeout
 	public int GPSR_ldb = Constants.GPSR_LOCATIONDB_IDEAL;
 	public Ideal locDB; // global location database for simulation 
+	public static double market_radius = 30;
 	
     // visualizaiton settings
 	/** if true, will visualize the simulation */

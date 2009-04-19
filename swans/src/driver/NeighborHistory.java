@@ -6,13 +6,21 @@ import jist.swans.misc.Location;
 import jist.swans.route.*;
 import jist.swans.route.RouteGPSR.*;
 
+/**
+ * stores the set of nodes, the history of neighbors and the current neighbors
+ * @author zhao
+ *
+ */
 public class NeighborHistory 
 {
-	public static int size;
-	public static Vector nodes;
+	public static int size; // the size of the nodes
+	public static Vector nodes; // the nodes set
 	public static Vector neighborHistory;
 	public static Vector neighborCurrent;
 	
+	/*
+	 * initialize the number of nodes, and the empty vector of neighbors
+	 */
 	public static void init(int s)
 	{
 		size = s;
@@ -27,6 +35,9 @@ public class NeighborHistory
 		}
 	}
 	
+	/*
+	 * deep copy from current neighbors to history neighbors
+	 */
 	public static void currentToHistory()
 	{
 		//neighborHistory = neighborCurrent;
@@ -48,6 +59,9 @@ public class NeighborHistory
 		nodes.set(i, rm);
 	}
 	
+	/*
+	 * update neighborCurrent, based on the knowledge of the nodes
+	 */
 	public static void updateCurrentNeighbor()
 	{
 		for(int i = 0; i < size; i++)
@@ -68,6 +82,9 @@ public class NeighborHistory
 		}
 	}
 	
+	/*
+	 * find the new appeared neighbors by comparing the current neighbor with the history
+	 */
 	public static Vector findNewNeighbor(int pos)
 	{
 		Vector result = new Vector();

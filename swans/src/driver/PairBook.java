@@ -3,10 +3,7 @@ package driver;
 import java.io.*;
 import java.util.*;
 
-
-public class PairBook {
-
-	
+public class PairBook {	
 
 
 	/**
@@ -19,11 +16,8 @@ public class PairBook {
 	long max_sec=28800;
 	
 	public PairBook() {
-		pairList = new Vector<NodePair>();
-		
-		max_sec = 28800;
-		//get the largest time in the file
-		
+		pairList = new Vector<NodePair>();		
+		max_sec = 28800;			
 	}
 	
 	
@@ -125,12 +119,6 @@ public class PairBook {
 				System.out.println((vec.getPairList().get(i)).getY());
 			}
 			}	
-
-	 }
-
-
-
-		
-	
+	 }	
 
 }

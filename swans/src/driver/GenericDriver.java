@@ -77,6 +77,8 @@ import jist.swans.radio.RadioNoise;
 import jist.swans.radio.RadioNoiseAdditive;
 import jist.swans.radio.RadioNoiseIndep;
 import jist.swans.route.IDPair;
+import jist.swans.route.MARKETMsg3;
+import jist.swans.route.MARKETMsg4;
 import jist.swans.route.RouteAodv;
 import jist.swans.route.RouteDsr_Ns2;
 import jist.swans.route.RouteDsr;
@@ -864,7 +866,18 @@ public class GenericDriver {
                         		RouteGPSR destinationNode = gpsrNodes.get(dst);
                         		System.out.println("src: " + sourceNode.getSelfId()
                         				+ " , dst: " + destinationNode.getSelfId());
-                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
+                        		MARKETMsg3 msg3 = sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()));
+                        		MARKETMsg4 msg4 = destinationNode.sendMsg4(msg3); 
+                        		
+                        		sourceNode.receiveMSg4(msg4);
+                        		
+                        		Evaluation.increaseTotal_report_received(msg3.getAnswers().size() + msg4.getAnswers().size() + msg3.getBrokerReport().size() + msg4.getBrokerReport().size());
+                        		Evaluation.increaseMatch_throuhput(msg3.getAnswers().size() + msg4.getAnswers().size());
+                        		Evaluation.increaseTotal_answers(msg3.getAnswers().size() + msg4.getAnswers().size());
+                        		//System.out.println("the total answer is " + Evaluation.getTotal_answers());
+                        		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
+                        		System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
+                        		System.out.println("the recall result is " + Evaluation.getRecall());
                         		
                         	}
                         	
@@ -876,7 +889,7 @@ public class GenericDriver {
             } 
         
         // the following is for iMote model
-        for (int j = 0; j < numTotalIters; j++) {
+        /*for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {
                         	
@@ -910,7 +923,7 @@ public class GenericDriver {
                     }, currentTime);
 
                 currentTime += delayInterval;
-            }
+            }*/
         
     } // buildField
 
@@ -1152,10 +1165,12 @@ public class GenericDriver {
 
         //clear memory
         nodes = null;
-
+        //System.out.println("the throughput result is " + Evaluation.getMatch_throuhput());
+        
         if (je.closeWhenDone) {
             je.visualizer = null;
             Visualizer.getActiveInstance().exit();
+           
         }
     }
 

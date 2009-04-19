@@ -50,7 +50,7 @@ public class Evaluation {
 	}
 
 	static public double getMatch_ratio() {
-		return match_throuhput/total_answers;
+		return match_throuhput/total_report_received;
 	}
 
 	static public double getResponse_time() {

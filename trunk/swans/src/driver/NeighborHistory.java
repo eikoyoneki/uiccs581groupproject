@@ -29,7 +29,18 @@ public class NeighborHistory
 	
 	public static void currentToHistory()
 	{
-		neighborHistory = neighborCurrent;
+		//neighborHistory = neighborCurrent;
+		for(int i = 0; i < size; i++)
+		{
+			Vector currN = (Vector)neighborCurrent.get(i);
+			Vector histN = new Vector();
+			for(int j = 0; j < currN.size(); j++)
+			{
+				int temp = (Integer)currN.get(j);
+				histN.add(temp);
+			}
+			neighborHistory.set(i, histN);
+		}
 	}
 	
 	public static void updateNodes(int i, RouteGPSR rm)

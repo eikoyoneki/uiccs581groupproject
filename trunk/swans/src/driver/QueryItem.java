@@ -9,8 +9,10 @@ public class QueryItem {
 	double center;
 	double range;
 	
-	public QueryItem() 
+	public QueryItem(long query_id, int node) 
 	{ 
+		this.query_id = query_id;
+		this.home_node = node;
 		Random randomGenerator = new Random();
 	    center = Math.abs(randomGenerator.nextGaussian());
 		while(center > 1)
@@ -22,8 +24,10 @@ public class QueryItem {
 	}
 	
 	
-	public QueryItem(int seed)
+	public QueryItem(long query_id, int node, int seed)
 	{
+		this.query_id = query_id;
+		this.home_node = node;
         Random randomGenerator = new Random(seed);
         center = Math.abs(randomGenerator.nextGaussian());
 		while(center > 1)

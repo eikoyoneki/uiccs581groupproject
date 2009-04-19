@@ -22,6 +22,12 @@ public class ReportBook {
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
+		
+	}
+	
+	public ReportBook(int node, QueryBook querybook){
+		ReportList = new Vector<ReportItem>();
+		addReport(node, querybook);
 	}
 	
 	public ReportBook(ReportBook book){
@@ -286,9 +292,7 @@ public class ReportBook {
 		//add a new report
 		//Every new report have to be added using this method
 		//to ensure its id is unique
-		ReportItem report = new ReportItem();
-		report.setReport_id(++gRN);
-		report.setHome_node(node);
+		ReportItem report = new ReportItem(++gRN, node);
 		trackSet.add(report.getReport_id());
 		reportIdList.add(report.getReport_id());
 		neverTransmitSet.add(report.getReport_id());
@@ -375,6 +379,7 @@ public class ReportBook {
 	}
 	public void setSelfunknowIdList(HashSet<Long> selfunknowIdList)
 	{
+		selfunknowIdList.removeAll(trackSet);
 		this.selfunknowIdList = selfunknowIdList;
 	}
 	public HashSet<Long> getTrackSet()

@@ -53,7 +53,7 @@ public class RouteMARKET extends RouteGPSR
 	
 	public void generateNewQuery()
 	{
-		querybook.addQuery();
+		querybook.addNewQuery(this.selfId);
 	}
 	
 	/**

@@ -30,7 +30,7 @@ public class ReportItem
 	private int age = 0;
 	private int timeEncounteratNeighbor = 0;// number of times the report has been encountered at a neighbor fi
 
-	public ReportItem(int seed)
+	/*public ReportItem(int seed)
 	{
 		Random randomGenerator = new Random(seed);
 		value = Math.atan(randomGenerator.nextDouble());
@@ -42,7 +42,7 @@ public class ReportItem
 		Random randomGenerator = new Random();
 		value = Math.atan(randomGenerator.nextDouble());
 		size = randomGenerator.nextInt(10);
-	}
+	}*/
 
 	public ReportItem(long id, int node, int seed)
 	{
@@ -50,6 +50,20 @@ public class ReportItem
 		// check the boundary condition here
 		
 		Random randomGenerator = new Random(seed);
+		value = Math.atan(randomGenerator.nextDouble());
+		size = randomGenerator.nextInt(10);
+		this.report_id = id;
+		this.home_node = node;
+		createTime = Calendar.getInstance();
+		
+	}
+	
+	public ReportItem(long id, int node)
+	{
+		// super();
+		// check the boundary condition here
+		
+		Random randomGenerator = new Random();
 		value = Math.atan(randomGenerator.nextDouble());
 		size = randomGenerator.nextInt(10);
 		this.report_id = id;

@@ -306,6 +306,14 @@ public class GenericDriver {
         net.setRouting(route);
 
         nodes.add(route);
+        
+        /* edit by yuchen, add nodes to history */
+        NeighborHistory.init(gpsrNodes.size());
+        for(int j = 0; j < gpsrNodes.size(); j++)
+        {
+        	NeighborHistory.updateNodes(j, (RouteGPSR)gpsrNodes.get(j));
+        }
+        //NeighborHistory.updateCurrentNeighbor();
     }
 
     /**
@@ -836,7 +844,6 @@ public class GenericDriver {
         long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
         long currentTime = 0;
         
-        NeighborHistory.init(gpsrNodes.size());
 
         for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
@@ -875,13 +882,14 @@ public class GenericDriver {
     	// get new neighbor list
     	Vector addedNeighbor = new Vector(); // new neighbor list
     	
+    	NeighborHistory.updateCurrentNeighbor();
     	for(int j = 0; j < gpsrNodes.size(); j++)
     	{
-    		RouteGPSR ri = (RouteGPSR) gpsrNodes.get(j);
-    		Vector newAdded = NeighborHistory.findNewNeighbor(j, ri.getNeighbor());
+    		Vector newAdded = NeighborHistory.findNewNeighbor(j);
     		for(int k = 0; k < newAdded.size(); k++)
     		{
-    			int id = macAddrToID(((NeighborEntry)newAdded.get(k)).macAddr, gpsrNodes);
+    			//System.out.println("new added neighbor");
+    			int id = (Integer)newAdded.get(k);
     			IDPair idp = new IDPair(j, id);
     			if(!addedNeighbor.contains(idp))
     			{
@@ -890,12 +898,7 @@ public class GenericDriver {
     		}
     	}
     	
-    	for(int j = 0; j < gpsrNodes.size(); j++)
-    	{
-    		// update neighbor history
-    		RouteGPSR ri = (RouteGPSR) gpsrNodes.get(j);
-    		NeighborHistory.update(j, ri.getNeighbor());
-    	}
+    	NeighborHistory.currentToHistory();
     	
     	return addedNeighbor;
     }

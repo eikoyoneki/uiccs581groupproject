@@ -4,6 +4,8 @@ package driver;
 import java.util.Calendar;
 import java.util.Random;
 
+import jist.runtime.JistAPI;
+
 public class ReportItem
 {
 	private long report_id;
@@ -69,6 +71,7 @@ public class ReportItem
 		this.report_id = id;
 		this.home_node = node;
 		createTime = Calendar.getInstance();
+		//JistAPI.getTime();
 		
 	}
 

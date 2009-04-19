@@ -873,6 +873,43 @@ public class GenericDriver {
                     }, currentTime);
 
                 currentTime += delayInterval;
+            } 
+        
+        // the following is for iMote model
+        for (int j = 0; j < numTotalIters; j++) {
+                JistAPI.runAt(new Runnable() {
+                        public void run() {
+                        	
+                            // get new neighbor list
+                        	PairBook pairs= new PairBook();
+                        	try {
+								pairs.getNewBook();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                        	System.out.println("thread should be running");
+                        	// for each pair, call xiaowen's interface
+                        	for(int j = 0; j < pairs.getPairList().size(); j++)
+                        	{
+                        		System.out.println("try to communicate");
+                        		NodePair p = pairs.getPairList().get(j);
+                        		int src = p.getX();
+                        		int dst = p.getY();
+                        		
+                        		RouteGPSR sourceNode = gpsrNodes.get(src);
+                        		RouteGPSR destinationNode = gpsrNodes.get(dst);
+                        		System.out.println("src: " + sourceNode.getSelfId()
+                        				+ " , dst: " + destinationNode.getSelfId());
+                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
+                        		
+                        	}
+                        	
+                        	addNewReport();
+                        }
+                    }, currentTime);
+
+                currentTime += delayInterval;
             }
         
     } // buildField

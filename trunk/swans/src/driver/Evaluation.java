@@ -1,12 +1,13 @@
 package driver;
 
 public class Evaluation {
-	private double total_report_received=0;
-	private double match_throuhput=0; //total_report_received_from_neigbors
+	
+	static private double total_report_received=0;
+	static private double match_throuhput=0; //total_report_received_from_neigbors
 					//the total number of reports that are “correctly” transmitted	
-	private double total_answers=0; // total number of answers ever generated in the system
-	private double total_response_time=0;
-	private double total_answered_query=0;
+	static private double total_answers=0; // total number of answers ever generated in the system
+	static private double total_response_time=0;
+	static private double total_answered_query=0;
     //those parameters are double not int because we need consider KNN
 	
 	
@@ -56,7 +57,6 @@ public class Evaluation {
 		
 		return total_response_time/total_answered_query;
 	}
-	
 	
 
 }

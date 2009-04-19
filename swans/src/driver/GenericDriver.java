@@ -859,7 +859,8 @@ public class GenericDriver {
                         		IDPair p = (IDPair) addedNeighbor.get(j);
                         		int src = p.part1;
                         		int dst = p.part2;
-                        		System.out.println("src: " + src + " , dst: " + dst);
+                        		System.out.println("src: " + ((RouteGPSR)(gpsrNodes.get(src))).getSelfId()
+                        				+ " , dst: " + ((RouteGPSR)(gpsrNodes.get(dst))).getSelfId());
 //                        		RouteMARKET sourceNode = (RouteMARKET)gpsrNodes.get(src);
 //                        		RouteMARKET destinationNode = (RouteMARKET)gpsrNodes.get(dst);
 //                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));

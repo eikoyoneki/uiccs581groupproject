@@ -12,8 +12,9 @@ public class QueryBook {
 	private HashSet<Long> queryIdSet = new HashSet<Long>();
 	private LinkedList<QueryItem> otherQueryList;//queylist get from other node in 
 	
-	public QueryBook(){
+	public QueryBook(int node){
 		QueryList = new LinkedList<QueryItem>();
+		addNewQuery(node);
 	}
 	public QueryBook(QueryBook book){
 		gQN = book.gQN;
@@ -73,24 +74,31 @@ public class QueryBook {
 		
 	}
 	
-	//when globaly generate a query, we can use this method to add the query to the node
-	public void addQuery()
-	{
-		if(QueryList.size() == sizeLimit)
-		{
-			delFirst();
-			addLast(new QueryItem());
-		}
-		else
-		{
-			addLast(new QueryItem());
-		}
-	}
+	
 	
 	//FIFO, add new item to the tail
 	synchronized public void addLast(QueryItem q){
 		this.getQueryList().addLast(q);		
 		this.queryIdSet.add(q.getQuery_id());
+	}
+	
+	//when globaly generate a query, we can use this method to add the query to the node
+	//this is the only method should use to generate new query
+	public void addNewQuery(int node)
+	{
+		QueryItem query = new QueryItem(++gQN, node);
+		if(QueryList.size() == sizeLimit)
+		{
+			delFirst();
+			this.getQueryList().addLast(query);		
+			this.queryIdSet.add(query.getQuery_id());
+		}
+		else
+		{
+			this.getQueryList().addLast(query);		
+			this.queryIdSet.add(query.getQuery_id());
+		}
+		
 	}
 	
 	public boolean isQueryExisting(long q_id) {

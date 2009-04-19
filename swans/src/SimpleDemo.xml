@@ -52,7 +52,7 @@
   
    <!-- node options -->
    <void property="nodes"> 
-   <int>10</int> 
+   <int>20</int> 
   </void> 
    <void property="transmitters"> 
    <int>10</int> 

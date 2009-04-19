@@ -38,8 +38,8 @@ public class PairBook {
 		}
 		else
 		{
-			System.out.println("exit");
-			System.exit(0);//stop here
+			System.out.println("run out of time, exit");
+			//System.exit(0);//stop here
 		}
 	
 	}
@@ -49,12 +49,6 @@ public class PairBook {
 		String sec = String.valueOf(secs);
 		
 		pairList.clear();
-		
-		LinkedList[] ll = new LinkedList [42];
-		for(int i=0;i<42;i++)
-		{
-			ll[i] = new LinkedList ();
-		}
 		
 		FileInputStream fstream = new FileInputStream(filename);
 		DataInputStream in = new DataInputStream(fstream);
@@ -76,12 +70,12 @@ public class PairBook {
 						indexNode1=Integer.parseInt(str1[1]);
 						indexNode2=Integer.parseInt(str1[i]);
 						int test;
-						test = ll[indexNode2].indexOf(indexNode1);
-						if(test == -1)
+						NodePair node = new NodePair(indexNode1, indexNode2);
+						test = whetherExist(indexNode1, indexNode2);
+						if(test == 0)
 						{
-							ll[indexNode1].add(indexNode2);
-						}
-						
+							pairList.add(node);
+						}	
 					}
 					strLine = br.readLine();
 					String str2[] = strLine.split(" ");
@@ -90,25 +84,29 @@ public class PairBook {
 			
 		}
 		//Close the input stream
-		in.close();
+		in.close();		
 		
-		int k=0;
-		while(k<42)
+	}
+	
+	public int whetherExist(int indexNode1, int indexNode2)
+	{
+		int l=0, m,n, i;
+		int num = pairList.size();
+		
+		for(i = 0; i < num; i++)
 		{
-			int size = ll[k].size();
-			if(size==0) k++;
-			else
-			{
-				for(int i = 0; i<ll[k].size();i++)
-				{	
-					int p = Integer.parseInt(ll[k].get(i).toString());
-					NodePair node = new NodePair(k,p);
-					
-					pairList.add(node);
-				}
-				k++;
-			}
-		}		
+			m = pairList.get(i).getX();
+			n = pairList.get(i).getY();
+			 if((indexNode1==n)&&(indexNode2==m))
+				 {l=1;break;}
+			 
+		}
+		
+		return l;
+	}
+	
+	public Vector<NodePair> getPairList() {
+		return pairList;
 	}
 	
 	public static void main(String[] args) throws IOException 
@@ -126,15 +124,11 @@ public class PairBook {
 				System.out.print("  Neighbor: ");
 				System.out.println((vec.getPairList().get(i)).getY());
 			}
-			}
-			
-			//abc.toArray();
+			}	
 
 	 }
 
-	public Vector<NodePair> getPairList() {
-		return pairList;
-	}
+
 
 		
 	

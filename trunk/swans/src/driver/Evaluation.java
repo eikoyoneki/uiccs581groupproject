@@ -15,45 +15,45 @@ public class Evaluation {
 	//private double match_ratio=0;    //precision = match_throughput/total_report_received
 	//private double avg_response_time=0;  //total_response_time/total_answered_query	
 	
-	public double getTotal_report_received() {
+	static public double getTotal_report_received() {
 		return total_report_received;
 	}
-	public void increaseTotal_report_received(double x) {
-		this.total_report_received += x;
+	static public void increaseTotal_report_received(double x) {
+		total_report_received += x;
 	}
-	public double getMatch_throuhput() {
+	static public double getMatch_throuhput() {
 		return match_throuhput;
 	}
-	public void increaseMatch_throuhput(double x) {
-		this.match_throuhput += x;
+	static public void increaseMatch_throuhput(double x) {
+		match_throuhput += x;
 	}
-	public double getTotal_answers() {
+	static public double getTotal_answers() {
 		return total_answers;
 	}
-	public void increaseTotal_answers(double x) {
-		this.total_answers += x;
+	static public void increaseTotal_answers(double x) {
+		total_answers += x;
 	}
-	public double getTotal_response_time() {
+	static public double getTotal_response_time() {
 		return total_response_time;
 	}
-	public void increaseTotal_response_time(double x) {
-		this.total_response_time += x;
+	static public void increaseTotal_response_time(double x) {
+		total_response_time += x;
 	}
-	public double getTotal_answered_query() {
+	static public double getTotal_answered_query() {
 		return total_answered_query;
 	}
-	public void increaseTotal_answered_query(double x) {
-		this.total_answered_query += x;
+	static public void increaseTotal_answered_query(double x) {
+		total_answered_query += x;
 	}
-	public double getRecall() {
+	static public double getRecall() {
 		return match_throuhput /total_answers;
 	}
 
-	public double getMatch_ratio() {
+	static public double getMatch_ratio() {
 		return match_throuhput/total_answers;
 	}
 
-	public double getResponse_time() {
+	static public double getResponse_time() {
 		
 		return total_response_time/total_answered_query;
 	}

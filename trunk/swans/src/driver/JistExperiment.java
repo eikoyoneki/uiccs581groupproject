@@ -252,6 +252,10 @@ public class JistExperiment implements JistAPI.DoNotRewrite
 	public int GPSR_ldb = Constants.GPSR_LOCATIONDB_IDEAL;
 	public Ideal locDB; // global location database for simulation 
 	public static double market_radius = 30;
+	public static long relayTriggerDuration = 2000;
+	public static int msgSize = 10;
+	public static int queryBookSize = 10;
+	public static int rpeortBookSize = 10;
 	
     // visualizaiton settings
 	/** if true, will visualize the simulation */

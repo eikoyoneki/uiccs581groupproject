@@ -79,6 +79,7 @@ import jist.swans.radio.RadioNoiseIndep;
 import jist.swans.route.IDPair;
 import jist.swans.route.MARKETMsg3;
 import jist.swans.route.MARKETMsg4;
+import jist.swans.route.MARKETREQMsg;
 import jist.swans.route.RouteAodv;
 import jist.swans.route.RouteDsr_Ns2;
 import jist.swans.route.RouteDsr;
@@ -906,9 +907,9 @@ public class GenericDriver {
                     		//  * to be completed *
                     		// save the result into boolean condition
                     		
-                    		boolean condition = true;
+                    		boolean req = false;
                     		
-                    		if(condition)
+                    		if(gpsrNodes.get(j).getIdleTime() > 2000)
                     		{
                     			Vector neighbors = (Vector)NeighborHistory.neighborCurrent.get(j); // get the current neighbor list for node j
                     			
@@ -920,6 +921,20 @@ public class GenericDriver {
                     			{
                     				int oneOfNeighbors = (Integer)neighbors.get(k);
                     				gpsrNodes.get(oneOfNeighbors); // neighbor of j
+                    				System.out.println("relay communication between src : " + gpsrNodes.get(j).getSelfId() + " to des : " + gpsrNodes.get(oneOfNeighbors).getSelfId());
+                    				MARKETREQMsg reqmsg = gpsrNodes.get(oneOfNeighbors).sendREQMsg(gpsrNodes.get(j).sendAdvMsg());
+                    				req = reqmsg.isReq();
+                    				if(req)
+                    					break;
+                    			}
+                    			if(req)
+                    			{
+	                    			for(int k = 0; k < neighbors.size(); k++)
+	                    			{
+	                    				int oneOfNeighbors = (Integer)neighbors.get(k);
+	                    				gpsrNodes.get(oneOfNeighbors); 
+	                    				gpsrNodes.get(oneOfNeighbors).receiveRelayMsg(gpsrNodes.get(j).sendRelayMsg());
+	                    			}
                     			}
                     		}
                     	}

@@ -46,9 +46,10 @@ public class KNNReportItem {
 	
 	
 
-	public KNNReportItem(int node, double x2, double y2) {
+	public KNNReportItem(long report_id, int node, double x2, double y2) {
 		// TODO Auto-generated constructor stub
 		Random randomGenerator = new Random();
+		this.report_id = report_id;
 		this.home_node = node;
 		createTime = Calendar.getInstance();
 		this.x = x2;

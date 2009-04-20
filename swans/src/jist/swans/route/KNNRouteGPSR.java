@@ -58,6 +58,7 @@ import jist.swans.route.geo.AddressGeographic;
 import jist.swans.route.geo.LocationDatabase;
 import driver.JistExperiment;
 //import driver.KNNQueryBook;
+import driver.KNNQueryBook;
 import driver.KNNQueryItem;
 import driver.KNNReportBook;
 import driver.KNNReportItem;
@@ -2407,27 +2408,26 @@ public class KNNRouteGPSR extends RouteGeo {
 		return this.selfId;
 	}
 	
-	private QueryBook querybook = new QueryBook(this.selfId);
+	private KNNQueryBook querybook = new KNNQueryBook(this.selfId,200,200);
+	//need to add the location
+	
 	private KNNReportBook reportbook = new KNNReportBook(this.selfId, querybook);
 	private final int msgSize = 20;
 	private Calendar lastMsgTime = Calendar.getInstance();
 
 	
 	
-	public void queryLocalDB(QueryItem query)
+	public void queryLocalDB(KNNQueryItem query)
 	{
 		
 	}
 	
-	public void generateNewReport()
+	public void generateNewReport(double x, double y)
 	{
-		reportbook.addReport(this.selfId, querybook);
+		reportbook.addReport(this.selfId, x,y,querybook);
 	}
 	
-	public void generateNewQuery()
-	{
-		querybook.addNewQuery(this.selfId);
-	}
+	
 	
 	/**
 	 * A send the first msg to the new neighbor B

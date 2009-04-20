@@ -986,6 +986,19 @@ public class GenericDriver {
             }*/
         
     } // buildField
+    
+    /*
+     * get the node's location by the index at gpsrNodes
+     */
+    public static Location getLocationByIndex(int index)
+    {
+    	RouteGPSR node = (RouteGPSR)gpsrNodes.get(index);
+    	if(node!=null)
+    	{
+    		return node.getCurrentLocation();
+    	}
+    	return null;
+    }
 
     /**
      * @author yuchen

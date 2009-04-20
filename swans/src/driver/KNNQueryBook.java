@@ -7,10 +7,11 @@ public class KNNQueryBook extends QueryBook{
 	
 	
 	private final int sizeLimit = 1; 	
+	//protected LinkedList<KNNQueryItem> QueryList;
 	
 	public KNNQueryBook(int node,double x, double y){
 		super(node);
-		QueryList = new LinkedList<QueryItem>();
+		QueryList = new LinkedList();
 		addNewQuery(node,x,y);
 	}
 	
@@ -31,7 +32,7 @@ public class KNNQueryBook extends QueryBook{
 	//this is the only method should use to generate new query
 	public void addNewQuery(int node, double x, double y)
 	{
-		QueryItem query = new KNNQueryItem(++gQN, node, x, y);
+		KNNQueryItem query = new KNNQueryItem(++gQN, node, x, y);
 		if(QueryList.size() == sizeLimit)
 		{
 			delFirst();

@@ -2412,9 +2412,9 @@ public class KNNRouteGPSR extends RouteGeo {
 	//need to add the location
 	
 	private KNNReportBook reportbook = new KNNReportBook(this.selfId, querybook);
-	private final int msgSize = 20;
 	private Calendar lastMsgTime = Calendar.getInstance();
-
+	private final int msgSize = JistExperiment.msgSize;
+	
 	
 	
 	public void queryLocalDB(KNNQueryItem query)
@@ -2571,7 +2571,13 @@ public class KNNRouteGPSR extends RouteGeo {
 			reportbook.mergeReport(msg4.getBrokerReport());
 		querybook.updateBook();
 	}
-
+	public boolean relayNeed()
+	{
+		if(getIdleTime() > JistExperiment.relayTriggerDuration)
+			return true;
+		else
+			return false;
+	}
 	
 	public MARKETADVMsg sendAdvMsg()
 	{
@@ -2585,16 +2591,13 @@ public class KNNRouteGPSR extends RouteGeo {
 		return reqMsg;
 	}
 	
-	public KNNMARKETRelayMsg sendRelayMsg(MARKETREQMsg reqMsg)
+	public KNNMARKETRelayMsg sendRelayMsg()
 	{
-		if(reqMsg.isReq())
-		{
-			KNNMARKETRelayMsg relayMsg = new KNNMARKETRelayMsg(reportbook.createRelayMsg());
-			return relayMsg;
-		}
-		else
-			return null;
+		KNNMARKETRelayMsg relayMsg = new KNNMARKETRelayMsg(reportbook.createRelayMsg());
+		return relayMsg;
 	}
+	
+
 	
 	public void receiveRelayMsg(KNNMARKETRelayMsg relayMsg)
 	{

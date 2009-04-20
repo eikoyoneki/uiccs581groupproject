@@ -9,16 +9,16 @@ import java.util.Vector;
 public class ReportBook {
 	static private long gRN = 0;//global report number control
 	
-	private Vector<ReportItem> ReportList;
-	private final int sizeLimit = 20;
-	private HashSet<Long> neighborWantIdList = new HashSet<Long>();//what neighbor want IDSa - TSb
-	private HashSet<Long> selfunknowIdList = new HashSet<Long>(); //what the neighbor can offer IDSb - IDSa
-	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
-	private HashSet<Long> reportIdList = new HashSet<Long>();
-	private MALENA supplytrainer = new MALENA();
-	private HashSet<ReportItem> answerSet = new HashSet<ReportItem>();//store the report content that should send to the encountered neighbor
-	private HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node
-	private Vector<Long> advSet = new Vector<Long>();
+	protected Vector<ReportItem> ReportList;
+	protected final int sizeLimit = JistExperiment.reportBookSize;
+	protected HashSet<Long> neighborWantIdList = new HashSet<Long>();//what neighbor want IDSa - TSb
+	protected HashSet<Long> selfunknowIdList = new HashSet<Long>(); //what the neighbor can offer IDSb - IDSa
+	protected HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
+	protected HashSet<Long> reportIdList = new HashSet<Long>();
+	protected MALENA supplytrainer = new MALENA();
+	protected HashSet<ReportItem> answerSet = new HashSet<ReportItem>();//store the report content that should send to the encountered neighbor
+	protected HashSet<Long> neverTransmitSet = new HashSet<Long>(); //track the report that has never transmit from this node
+	protected Vector<Long> advSet = new Vector<Long>();
 
 	public ReportBook(){
 		ReportList = new Vector<ReportItem>();
@@ -268,7 +268,7 @@ public class ReportBook {
 	
 	public void rankReport()
 	{
-		CacheScheme.GRS(this.getReportList());
+		rankReport(this.getReportList());
 	}
 	
 	public void rankReport(Vector<ReportItem> reports)

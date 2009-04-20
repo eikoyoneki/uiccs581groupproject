@@ -7,10 +7,10 @@ import java.util.*;
 public class QueryBook {
 	
 	static private long gQN = 0;//global Query number control
-	private LinkedList<QueryItem> QueryList;
-	private final int sizeLimit = 10; 
-	private HashSet<Long> queryIdSet = new HashSet<Long>();
-	private LinkedList<QueryItem> otherQueryList;//queylist get from other node in 
+	protected LinkedList<QueryItem> QueryList;
+	protected final int sizeLimit = JistExperiment.queryBookSize; 
+	protected HashSet<Long> queryIdSet = new HashSet<Long>();
+	protected LinkedList<QueryItem> otherQueryList;//queylist get from other node in 
 	
 	public QueryBook(int node){
 		QueryList = new LinkedList<QueryItem>();

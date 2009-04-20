@@ -8,29 +8,29 @@ import jist.runtime.JistAPI;
 
 public class ReportItem
 {
-	private long report_id;
-	private int home_node;
-	private int size;
-	private double value;
-	private Calendar createTime;
+	protected long report_id;
+	protected int home_node;
+	protected int size;
+	protected double value;
+	protected Calendar createTime;
 
-	private int numOfHit = 0; // number of hit for this report in the certain node
-	private int numOfOtherHit = 0; // number of hit for other report in the node after the hit of itself
+	protected int numOfHit = 0; // number of hit for this report in the certain node
+	protected int numOfOtherHit = 0; // number of hit for other report in the node after the hit of itself
 
-	private int numOfHit2 = 0;
-	private int numOfOtherHit2 = 0; // the number of hit correspond to the LRU2,
+	protected int numOfHit2 = 0;
+	protected int numOfOtherHit2 = 0; // the number of hit correspond to the LRU2,
 									// and LFU2
 
-	private int duration = 0; // how long the report stay in the reportDB
-	private double freq = 0; // frequency of report accessed,added in need of
+	protected int duration = 0; // how long the report stay in the reportDB
+	protected double freq = 0; // frequency of report accessed,added in need of
 								// LFU = numOfHit / duration,
 								// should be updated every simulation time
-	private double freq2 = 0; // used for LFU2,= numOfHit2 / duration,
+	protected double freq2 = 0; // used for LFU2,= numOfHit2 / duration,
 	
-	private double demand = 0;
-	private double supply = 0;
-	private int age = 0;
-	private int timeEncounteratNeighbor = 0;// number of times the report has been encountered at a neighbor fi
+	protected double demand = 0;
+	protected double supply = 0;
+	protected int age = 0;
+	protected int timeEncounteratNeighbor = 0;// number of times the report has been encountered at a neighbor fi
 
 	/*public ReportItem(int seed)
 	{

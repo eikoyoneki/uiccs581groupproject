@@ -256,6 +256,7 @@ public class JistExperiment implements JistAPI.DoNotRewrite
 	public static int msgSize = 10;
 	public static int queryBookSize = 10;
 	public static int reportBookSize = 10;
+	public boolean knn = false;
 	
     // visualizaiton settings
 	/** if true, will visualize the simulation */

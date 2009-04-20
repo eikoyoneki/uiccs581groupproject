@@ -300,6 +300,8 @@ public class KNNReportBook {
 	synchronized public void delLastReport()
 	{
 		int i = ReportList.size();
+		if(i == 0)
+			return;
 		reportIdList.remove(ReportList.get(i - 1).getReport_id());
 		neverTransmitSet.remove(ReportList.get(i - 1).getReport_id());
 		ReportList.remove(i - 1);

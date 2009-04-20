@@ -274,7 +274,7 @@ public class ReportBook {
 	
 	public void rankReport(Vector<ReportItem> reports)
 	{
-		CacheScheme.GRS(reports);
+		CacheScheme.LFU1(reports);
 	}
 	
 	public int getBookSize()
@@ -289,7 +289,10 @@ public class ReportBook {
 	
 	synchronized public void delLastReport()
 	{
+		
 		int i = ReportList.size();
+		if(i == 0)
+			return;
 		reportIdList.remove(ReportList.get(i - 1).getReport_id());
 		neverTransmitSet.remove(ReportList.get(i - 1).getReport_id());
 		ReportList.remove(i - 1);

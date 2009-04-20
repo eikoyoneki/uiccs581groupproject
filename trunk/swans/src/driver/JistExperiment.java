@@ -261,7 +261,7 @@ public class JistExperiment implements JistAPI.DoNotRewrite
     /** if true, will show interference */
     public boolean showInterference = true;
     /** true if memory should be measured */
-    public boolean measureMemory = false;
+    public boolean measureMemory = true;
     /** measures sim thoughput if true */
     public boolean measureThroughput = false;
 	

@@ -1,6 +1,7 @@
 //Wenxuan Gao, Spring 2009 
 package driver;
 
+import java.util.Calendar;
 import java.util.Random;
 
 public class QueryItem {
@@ -8,6 +9,8 @@ public class QueryItem {
 	int home_node;
 	double center;
 	double range;
+	private Calendar createTime;
+	private boolean matched = false;
 	
 	
 	public QueryItem(long query_id, int node) 
@@ -22,6 +25,7 @@ public class QueryItem {
 		}
 		double limit = Math.min(center, 1-center);
 		range = limit * randomGenerator.nextDouble(); 
+		createTime = Calendar.getInstance();
 	}
 	
 	
@@ -36,7 +40,8 @@ public class QueryItem {
 			center *= randomGenerator.nextDouble();
 		}
 		double limit = Math.min(center, 1-center);
-		range = limit * randomGenerator.nextDouble();	
+		range = limit * randomGenerator.nextDouble();
+		createTime = Calendar.getInstance();
 	}
 	
 		
@@ -79,4 +84,30 @@ public class QueryItem {
 	public void setQuery_id(long query_id) {
 		this.query_id = query_id;
 	}
+
+
+	public Calendar getCreateTime()
+	{
+		return createTime;
+	}
+
+
+	public void setCreateTime(Calendar createTime)
+	{
+		this.createTime = createTime;
+	}
+
+
+	public boolean isMatched()
+	{
+		return matched;
+	}
+
+
+	public void setMatched(boolean matched)
+	{
+		this.matched = matched;
+	}
+	
+	
 }

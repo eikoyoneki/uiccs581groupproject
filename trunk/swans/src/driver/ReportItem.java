@@ -142,7 +142,17 @@ public class ReportItem
 	{
 		if (this.value <= (q.center + q.range)
 				&& this.value >= (q.center - q.range))
+		{
+			if(!q.isMatched())
+			{
+				q.setMatched(true);
+				long time = Calendar.getInstance().getTimeInMillis() - q.getCreateTime().getTimeInMillis();
+				Evaluation.increaseTotal_response_time(time);
+				Evaluation.increaseTotal_answered_query(1);
+			}
 			return true;
+			
+		}
 		else
 			return false;
 	}

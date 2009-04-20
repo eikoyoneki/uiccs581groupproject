@@ -833,6 +833,8 @@ public class GenericDriver {
                             System.out.println("aab");
                             //            long threadMem = Visualizer.getActiveInstance().getUsedMemory();
                             memoryConsumption.add(new Long(baseMem));
+                            addNewReport();
+                            addNewQuery();
                         }
                     }, currentTime);
 
@@ -842,7 +844,7 @@ public class GenericDriver {
         
         
         System.out.println("a thread is generated, monitering the neighbor");
-        int numTotalIters = 20;
+        int numTotalIters = 500;
         long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
         long currentTime = 0;
         
@@ -878,10 +880,11 @@ public class GenericDriver {
                         		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
                         		System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
                         		System.out.println("the recall result is " + Evaluation.getRecall());
+                        		System.out.println("the response time is " + Evaluation.getResponse_time());
                         		
                         	}
                         	
-                        	addNewReport();
+                        	//addNewReport();
                         	//addNewQuery();
                         	
                         }

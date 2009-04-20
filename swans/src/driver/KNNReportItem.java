@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class KNNReportItem {
 	
-	
+	//try
 	long report_id;
 	int home_node;
 	private Calendar createTime;
@@ -63,6 +63,19 @@ public class KNNReportItem {
 	{
 		timeEncounteratNeighbor++;
 	}
+	
+	public void computeDemand(KNNQueryBook querybook,double max_dist)
+	{
+		int querynum = querybook.getQueryList().size();
+		double demand = 0.0;
+		for(KNNQueryItem query : querybook.getQueryList())
+		{
+
+				demand += match(query,max_dist);			
+		}
+		demand = demand / querynum;
+	}
+	
 
 	public void refresh()
 	{

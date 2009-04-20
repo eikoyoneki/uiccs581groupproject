@@ -142,6 +142,7 @@ public class MALENA
 	
 	public void bayesianTrain(KNNReportBook reportbook)
 	{
+		normalizeExample();
 		for(Calendar c : trainExample.keySet())
 		{
 			for(Example example : trainData)

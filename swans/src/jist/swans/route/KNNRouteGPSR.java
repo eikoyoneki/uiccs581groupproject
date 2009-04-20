@@ -2436,9 +2436,9 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * whichi means what the node can offer
 	 * @return
 	 */
-	public MARKETMsg1 sendMsg1()
+	public KNNMARKETMsg1 sendMsg1()
 	{
-		MARKETMsg1 msg1 = new MARKETMsg1(querybook, reportbook.getReportIdList());
+		KNNMARKETMsg1 msg1 = new KNNMARKETMsg1(querybook, reportbook.getReportIdList());
 		return msg1;
 	}
 	
@@ -2449,11 +2449,11 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * @param msg1
 	 * @return
 	 */
-	public MARKETMsg2 sendMsg2(MARKETMsg1 msg1)
+	public KNNMARKETMsg2 sendMsg2(KNNMARKETMsg1 msg1)
 	{
 		//do I have to query the report database here?
 		//and also update my query database?
-		MARKETMsg2 msg2 = new MARKETMsg2();
+		KNNMARKETMsg2 msg2 = new KNNMARKETMsg2();
 		msg2.setQuerybook(querybook);
 		//store the query list from A
 		querybook.setOtherQueryList(msg1.getQuerybook().getQueryList());
@@ -2489,7 +2489,7 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * @param msg2
 	 * @return
 	 */
-	public MARKETMsg3 sendMsg3(MARKETMsg2 msg2)
+	public KNNMARKETMsg3 sendMsg3(KNNMARKETMsg2 msg2)
 	{
 		reportbook.setSelfunknowIdList(msg2.getreportCanOffer());
 		reportbook.setNeighborWantIdList(msg2.getReportUnknown());
@@ -2499,10 +2499,10 @@ public class KNNRouteGPSR extends RouteGeo {
 		
 		reportbook.computeSupply(querybook);
 		
-		MARKETMsg3 msg3 = new MARKETMsg3();
+		KNNMARKETMsg3 msg3 = new KNNMARKETMsg3();
 		msg3.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
 		int size = 0;
-		for(ReportItem report : msg3.getAnswers())
+		for(KNNReportItem report : msg3.getAnswers())
 		{
 			size += report.getSize();
 		}
@@ -2528,15 +2528,15 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * @param msg3
 	 * @return
 	 */
-	public MARKETMsg4 sendMsg4(MARKETMsg3 msg3)
+	public KNNMARKETMsg4 sendMsg4(KNNMARKETMsg3 msg3)
 	{
-		MARKETMsg4 msg4 = new MARKETMsg4();
+		KNNMARKETMsg4 msg4 = new KNNMARKETMsg4();
 		reportbook.setNeighborWantIdList(msg3.getReportNeed());
 		reportbook.getHitReport(querybook.getOtherQueryList());
 		
 		msg4.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
 		int size = 0;
-		for(ReportItem report : msg3.getAnswers())
+		for(KNNReportItem report : msg3.getAnswers())
 		{
 			size += report.getSize();
 		}
@@ -2564,7 +2564,7 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * A just merge the report
 	 * @param msg4
 	 */
-	public void receiveMSg4(MARKETMsg4 msg4)
+	public void receiveMSg4(KNNMARKETMsg4 msg4)
 	{
 		reportbook.mergeReport(msg4.getAnswers());
 		if(msg4.getBrokerReport().size() != 0)
@@ -2585,40 +2585,40 @@ public class KNNRouteGPSR extends RouteGeo {
 		return reqMsg;
 	}
 	
-	public MARKETRelayMsg sendRelayMsg(MARKETREQMsg reqMsg)
+	public KNNMARKETRelayMsg sendRelayMsg(MARKETREQMsg reqMsg)
 	{
 		if(reqMsg.isReq())
 		{
-			MARKETRelayMsg relayMsg = new MARKETRelayMsg(reportbook.createRelayMsg());
+			KNNMARKETRelayMsg relayMsg = new KNNMARKETRelayMsg(reportbook.createRelayMsg());
 			return relayMsg;
 		}
 		else
 			return null;
 	}
 	
-	public void receiveRelayMsg(MARKETRelayMsg relayMsg)
+	public void receiveRelayMsg(KNNMARKETRelayMsg relayMsg)
 	{
 		if(relayMsg != null)
 			reportbook.mergeReport(relayMsg.getRelayReports());
 	}
 	
 	
-	public QueryBook getQuerybook()
+	public KNNQueryBook getQuerybook()
 	{
 		return querybook;
 	}
 
-	public void setQuerybook(QueryBook querybook)
+	public void setQuerybook(KNNQueryBook querybook)
 	{
 		this.querybook = querybook;
 	}
 
-	public ReportBook getReportbook()
+	public KNNReportBook getReportbook()
 	{
 		return reportbook;
 	}
 
-	public void setReportbook(ReportBook reportbook)
+	public void setReportbook(KNNReportBook reportbook)
 	{
 		this.reportbook = reportbook;
 	}

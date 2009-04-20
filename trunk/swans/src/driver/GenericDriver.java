@@ -897,6 +897,7 @@ public class GenericDriver {
         /*
          * for Relay Interaction
          */
+        currentTime = 0;
         for (int j = 0; j < numTotalIters; j++) {
             JistAPI.runAt(new Runnable() {
                     public void run() {
@@ -909,7 +910,7 @@ public class GenericDriver {
                     		
                     		boolean req = false;
                     		
-                    		if(gpsrNodes.get(j).getIdleTime() > 2000)
+                    		if(gpsrNodes.get(j).relayNeed())
                     		{
                     			Vector neighbors = (Vector)NeighborHistory.neighborCurrent.get(j); // get the current neighbor list for node j
                     			
@@ -945,6 +946,7 @@ public class GenericDriver {
         } 
         
         // the following is for iMote model
+       // long currentTime = 0;
         /*for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {

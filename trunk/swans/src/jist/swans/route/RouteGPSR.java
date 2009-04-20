@@ -2409,7 +2409,7 @@ public class RouteGPSR extends RouteGeo {
 	
 	private QueryBook querybook = new QueryBook(this.selfId);
 	private ReportBook reportbook = new ReportBook(this.selfId, querybook);
-	private final int msgSize = 20;
+	private final int msgSize = JistExperiment.msgSize;
 	private Calendar lastMsgTime = Calendar.getInstance();
 
 	
@@ -2572,6 +2572,13 @@ public class RouteGPSR extends RouteGeo {
 		querybook.updateBook();
 	}
 
+	public boolean relayNeed()
+	{
+		if(getIdleTime() > JistExperiment.relayTriggerDuration)
+			return true;
+		else
+			return false;
+	}
 	
 	public MARKETADVMsg sendAdvMsg()
 	{

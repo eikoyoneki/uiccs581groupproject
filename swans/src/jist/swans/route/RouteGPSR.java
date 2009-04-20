@@ -2585,15 +2585,10 @@ public class RouteGPSR extends RouteGeo {
 		return reqMsg;
 	}
 	
-	public MARKETRelayMsg sendRelayMsg(MARKETREQMsg reqMsg)
+	public MARKETRelayMsg sendRelayMsg()
 	{
-		if(reqMsg.isReq())
-		{
-			MARKETRelayMsg relayMsg = new MARKETRelayMsg(reportbook.createRelayMsg());
-			return relayMsg;
-		}
-		else
-			return null;
+		MARKETRelayMsg relayMsg = new MARKETRelayMsg(reportbook.createRelayMsg());
+		return relayMsg;
 	}
 	
 	public void receiveRelayMsg(MARKETRelayMsg relayMsg)

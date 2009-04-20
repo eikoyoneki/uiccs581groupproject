@@ -188,6 +188,7 @@ public class ReportBook {
 	
 	public Vector<Long> createAdvMsg(int size)
 	{
+		advSet.clear();
 		Vector<ReportItem> reportCandidate = new Vector();
 		for(Long id : neverTransmitSet)
 		{

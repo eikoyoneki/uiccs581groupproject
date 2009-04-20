@@ -6,7 +6,7 @@ import java.util.*;
 
 public class QueryBook {
 	
-	static private long gQN = 0;//global Query number control
+	static protected long gQN = 0;//global Query number control
 	protected LinkedList<QueryItem> QueryList;
 	protected final int sizeLimit = JistExperiment.queryBookSize; 
 	protected HashSet<Long> queryIdSet = new HashSet<Long>();

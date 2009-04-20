@@ -10,7 +10,7 @@ public class PairBook {
 	 * @param args
 	 */
 	//private static Vector<NodePair> pairList;
-	private String filename = "src/neighbors";
+	private String filename = "./neighbors";
 	Vector<NodePair> pairList; //pairs list
 	static long sec_cur = 0; //current second
 	long max_sec=28800;

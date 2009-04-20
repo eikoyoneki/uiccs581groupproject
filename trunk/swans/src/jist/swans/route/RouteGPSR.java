@@ -2409,7 +2409,7 @@ public class RouteGPSR extends RouteGeo {
 	
 	private QueryBook querybook = new QueryBook(this.selfId);
 	private ReportBook reportbook = new ReportBook(this.selfId, querybook);
-	private final int msgSize = 10;
+	private final int msgSize = 20;
 	private Calendar lastMsgTime = Calendar.getInstance();
 
 	
@@ -2598,7 +2598,8 @@ public class RouteGPSR extends RouteGeo {
 	
 	public void receiveRelayMsg(MARKETRelayMsg relayMsg)
 	{
-		reportbook.mergeReport(relayMsg.getRelayReports());
+		if(relayMsg != null)
+			reportbook.mergeReport(relayMsg.getRelayReports());
 	}
 	
 	

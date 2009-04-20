@@ -114,6 +114,7 @@ public class KNNReportBook {
 	
 	public void getHitReport(LinkedList<KNNQueryItem> otherQueryList)
 	{
+		answerSet.clear();
 		for(KNNQueryItem query : otherQueryList)
 		{
 			match(query);

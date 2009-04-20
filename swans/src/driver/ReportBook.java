@@ -101,6 +101,7 @@ public class ReportBook {
 	
 	public void getHitReport(LinkedList<QueryItem> otherQueryList)
 	{
+		answerSet.clear();
 		for(QueryItem query : otherQueryList)
 		{
 			match(query);

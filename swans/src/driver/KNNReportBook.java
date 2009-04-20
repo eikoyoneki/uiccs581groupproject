@@ -295,9 +295,7 @@ public class KNNReportBook {
 //		x = getNodeLocationX(node); //still need to be implemented
 //		y = getNodeLocationY(node);
 		
-		KNNReportItem report = new KNNReportItem(node,x,y);
-		report.setReport_id(++gRN);
-		report.setHome_node(node);
+		KNNReportItem report = new KNNReportItem(++gRN,node,x,y);		
 		trackSet.add(report.getReport_id());
 		reportIdList.add(report.getReport_id());
 		neverTransmitSet.add(report.getReport_id());

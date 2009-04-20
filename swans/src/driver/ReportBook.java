@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.Vector;
 
 public class ReportBook {
-	static private long gRN = 0;//global report number control
+	static protected long gRN = 0;//global report number control
 	
 	protected Vector<ReportItem> ReportList;
 	protected final int sizeLimit = JistExperiment.reportBookSize;

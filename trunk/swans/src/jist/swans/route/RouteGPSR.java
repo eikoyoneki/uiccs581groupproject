@@ -32,6 +32,7 @@
 package jist.swans.route; 
 
 import java.awt.Color;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -2409,6 +2410,7 @@ public class RouteGPSR extends RouteGeo {
 	private QueryBook querybook = new QueryBook(this.selfId);
 	private ReportBook reportbook = new ReportBook(this.selfId, querybook);
 	private final int msgSize = 10;
+	private Calendar lastMsgTime = Calendar.getInstance();
 
 	
 	
@@ -2513,6 +2515,7 @@ public class RouteGPSR extends RouteGeo {
 		
 		msg3.setReportNeed(reportbook.getSelfunknowIdList());
 
+		lastMsgTime = Calendar.getInstance();
 		return msg3;
 	}
 	
@@ -2551,6 +2554,7 @@ public class RouteGPSR extends RouteGeo {
 		if(msg3.getBrokerReport().size() != 0)
 			reportbook.mergeReport(msg3.getBrokerReport());
 
+		lastMsgTime = Calendar.getInstance();
 		return msg4;
 		
 	}
@@ -2616,6 +2620,11 @@ public class RouteGPSR extends RouteGeo {
 	public void setReportbook(ReportBook reportbook)
 	{
 		this.reportbook = reportbook;
+	}
+	
+	public long getIdleTime()
+	{
+		return Calendar.getInstance().getTimeInMillis() - lastMsgTime.getTimeInMillis();
 	}
 	
 }

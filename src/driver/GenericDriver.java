@@ -111,6 +111,8 @@ public class GenericDriver {
     static int idUdp = 0;
     
     public static Vector<RouteGPSR> gpsrNodes = new Vector();
+    public static int round = 0;
+    public static int relayround = 0;
 
     /**
     * Add node to the field and start it.
@@ -843,7 +845,7 @@ public class GenericDriver {
             }
         }
         
-        int totaltime = je.startTime;
+        int totaltime = je.startTime + je.duration;
         
         System.out.println("a thread is generated, monitering the neighbor");
         int numTotalIters = 100;
@@ -854,22 +856,22 @@ public class GenericDriver {
         for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {
-                        	
+                        	round++;
                             // get new neighbor list
                         	Vector addedNeighbor = getNewNeighborList();
                         	System.out.println("thread should be running");
                         	// for each pair, call xiaowen's interface
-                        	for(int j = 0; j < addedNeighbor.size(); j++)
+                        	for(int i = 0; i < addedNeighbor.size(); i++)
                         	{
                         		System.out.println("try to communicate");
-                        		IDPair p = (IDPair) addedNeighbor.get(j);
+                        		IDPair p = (IDPair) addedNeighbor.get(i);
                         		int src = p.part1;
                         		int dst = p.part2;
                         		
                         		RouteGPSR sourceNode = gpsrNodes.get(src);
                         		RouteGPSR destinationNode = gpsrNodes.get(dst);
-                        		System.out.println("src: " + sourceNode.getSelfId()
-                        				+ " , dst: " + destinationNode.getSelfId());
+                        		//System.out.println("src: " + sourceNode.getSelfId()
+                        		//		+ " , dst: " + destinationNode.getSelfId());
                         		MARKETMsg3 msg3 = sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()));
                         		MARKETMsg4 msg4 = destinationNode.sendMsg4(msg3); 
                         		
@@ -883,7 +885,7 @@ public class GenericDriver {
                         		System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
                         		System.out.println("the recall result is " + Evaluation.getRecall());
                         		System.out.println("the response time is " + Evaluation.getResponse_time());
-                        		
+                        		System.out.println("this is the " + round + " round");
                         	}
                         	
                         	//addNewReport();
@@ -891,7 +893,7 @@ public class GenericDriver {
                         	
                         }
                     }, currentTime);
-
+                //System.out.println("the iter is " + j);
                 currentTime += delayInterval;
             } 
         
@@ -902,8 +904,8 @@ public class GenericDriver {
         for (int j = 0; j < numTotalIters; j++) {
             JistAPI.runAt(new Runnable() {
                     public void run() {
-                    	
-                    	for(int j = 0; j < gpsrNodes.size(); j++)
+                    	relayround++;
+                    	for(int i = 0; i < gpsrNodes.size(); i++)
                     	{
                     		// test if the current node: gpsrNodes.get(j) satisfies certain criteria
                     		//  * to be completed *
@@ -911,9 +913,9 @@ public class GenericDriver {
                     		
                     		boolean req = false;
                     		
-                    		if(gpsrNodes.get(j).getIdleTime() > 2000)
+                    		if(gpsrNodes.get(i).getIdleTime() > JistExperiment.relayTriggerDuration)
                     		{
-                    			Vector neighbors = (Vector)NeighborHistory.neighborCurrent.get(j); // get the current neighbor list for node j
+                    			Vector neighbors = (Vector)NeighborHistory.neighborCurrent.get(i); // get the current neighbor list for node j
                     			
                     			// the vector neighbors stores the index of nodes in gpsrNodes
                     			// for example, if neighbors contain a neighbor with value Integer:5
@@ -922,9 +924,9 @@ public class GenericDriver {
                     			for(int k = 0; k < neighbors.size(); k++)
                     			{
                     				int oneOfNeighbors = (Integer)neighbors.get(k);
-                    				gpsrNodes.get(oneOfNeighbors); // neighbor of j
-                    				System.out.println("relay communication between src : " + gpsrNodes.get(j).getSelfId() + " to des : " + gpsrNodes.get(oneOfNeighbors).getSelfId());
-                    				MARKETREQMsg reqmsg = gpsrNodes.get(oneOfNeighbors).sendREQMsg(gpsrNodes.get(j).sendAdvMsg());
+                    				//gpsrNodes.get(oneOfNeighbors); // neighbor of j
+                    				//System.out.println("relay communication between src : " + gpsrNodes.get(i).getSelfId() + " to des : " + gpsrNodes.get(oneOfNeighbors).getSelfId());
+                    				MARKETREQMsg reqmsg = gpsrNodes.get(oneOfNeighbors).sendREQMsg(gpsrNodes.get(i).sendAdvMsg());
                     				req = reqmsg.isReq();
                     				if(req)
                     					break;
@@ -933,16 +935,20 @@ public class GenericDriver {
                     			{
 	                    			for(int k = 0; k < neighbors.size(); k++)
 	                    			{
+	                    				//System.out.println("node " + gpsrNodes.get(i).getSelfId() + "have " + neighbors.size() + " neighbors");
 	                    				int oneOfNeighbors = (Integer)neighbors.get(k);
-	                    				gpsrNodes.get(oneOfNeighbors); 
-	                    				gpsrNodes.get(oneOfNeighbors).receiveRelayMsg(gpsrNodes.get(j).sendRelayMsg());
+	                    				//System.out.println("and the neighbor is " + gpsrNodes.get(oneOfNeighbors).getSelfId());
+	                    				//; 
+	                    				gpsrNodes.get(oneOfNeighbors).receiveRelayMsg(gpsrNodes.get(i).sendRelayMsg());
+	                    				//System.out.println("send relay msg from " + gpsrNodes.get(i).getSelfId());
 	                    			}
                     			}
                     		}
                     	}
+                    	System.out.println("this is the " + relayround + " relayround");
                     }
                 }, currentTime);
-
+            //System.out.println("the iter is " + j);
             currentTime += delayInterval;
         } 
         

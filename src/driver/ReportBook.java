@@ -170,7 +170,7 @@ public class ReportBook {
 	
 	public Vector<ReportItem> createRelayMsg()
 	{
-		Vector<ReportItem> reporttoSend = new Vector();
+		Vector<ReportItem> reporttoSend = new Vector<ReportItem>();
 		
 		for(Long id : advSet)
 		{
@@ -179,7 +179,7 @@ public class ReportBook {
 				if(report.getReport_id() == id)
 				{
 					reporttoSend.add(report);
-					neverTransmitSet.remove(report.getReport_id());
+					neverTransmitSet.remove(id);
 				}
 			}
 		}

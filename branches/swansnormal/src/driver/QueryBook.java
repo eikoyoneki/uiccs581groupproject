@@ -8,7 +8,7 @@ public class QueryBook {
 	
 	static private long gQN = 0;//global Query number control
 	private LinkedList<QueryItem> QueryList;
-	private final int sizeLimit = 10; 
+	private final int sizeLimit = JistExperiment.queryBookSize; 
 	private HashSet<Long> queryIdSet = new HashSet<Long>();
 	private LinkedList<QueryItem> otherQueryList;//queylist get from other node in 
 	

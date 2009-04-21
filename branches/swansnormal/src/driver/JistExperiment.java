@@ -253,9 +253,9 @@ public class JistExperiment implements JistAPI.DoNotRewrite
 	public Ideal locDB; // global location database for simulation 
 	public static double market_radius = 30;
 	public static long relayTriggerDuration = 2000;
-	public static int msgSize = 10;
+	public static int msgSize = 20;
 	public static int queryBookSize = 10;
-	public static int rpeortBookSize = 10;
+	public static int reportBookSize = 20;
 	
     // visualizaiton settings
 	/** if true, will visualize the simulation */

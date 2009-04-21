@@ -843,10 +843,11 @@ public class GenericDriver {
             }
         }
         
+        int totaltime = je.startTime;
         
         System.out.println("a thread is generated, monitering the neighbor");
-        int numTotalIters = 500;
-        long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
+        int numTotalIters = 100;
+        long delayInterval = (long) Math.ceil(((double) totaltime * (double) Constants.SECOND) / (double) numTotalIters);
         long currentTime = 0;
         
 
@@ -897,6 +898,7 @@ public class GenericDriver {
         /*
          * for Relay Interaction
          */
+        currentTime = 0;
         for (int j = 0; j < numTotalIters; j++) {
             JistAPI.runAt(new Runnable() {
                     public void run() {
@@ -1229,6 +1231,10 @@ public class GenericDriver {
         }
 
         output += je.penetrationRatio;
+        System.out.println("the recall result is " + Evaluation.getRecall());
+        System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
+		
+		System.out.println("the response time is " + Evaluation.getResponse_time());
 
         //clear memory
         nodes = null;

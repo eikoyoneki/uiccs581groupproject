@@ -4,13 +4,13 @@
 
  <!-- timing -->
   <void property="duration"> 
-   <int>90</int> 
+   <int>10</int> 
   </void> 
   <void property="resolutionTime"> 
-   <int>60</int> 
+   <int>5</int> 
   </void> 
   <void property="startTime"> 
-   <int>60</int> 
+   <int>5</int> 
   </void> 
 
  <!-- environment -->
@@ -52,7 +52,7 @@
   
    <!-- node options -->
    <void property="nodes"> 
-   <int>200</int> 
+   <int>100</int> 
   </void> 
    <void property="transmitters"> 
    <int>10</int> 
@@ -77,10 +77,10 @@
    <int>2</int> 
   </void> 
    <void property="fieldX"> 
-   <int>300</int> 
+   <int>700</int> 
   </void> 
   <void property="fieldY"> 
-   <int>200</int> 
+   <int>600</int> 
   </void> 
 
  <!-- visualization options -->

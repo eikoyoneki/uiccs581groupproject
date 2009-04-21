@@ -274,7 +274,7 @@ public class ReportBook {
 	
 	public void rankReport(Vector<ReportItem> reports)
 	{
-		CacheScheme.GRS(reports);
+		CacheScheme.LRU1(reports);
 	}
 	
 	public int getBookSize()

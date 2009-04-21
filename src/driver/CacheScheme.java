@@ -1,5 +1,7 @@
 package driver;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -12,10 +14,10 @@ public class CacheScheme
 		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			Vector<ReportItem> sameRankReport = tempMap.get(ri);
-			if(sameRankReport == null)
-				tempMap.put((double)(ri.getDemand() * (ri.getSupply()))/(double)ri.getSize(), new Vector<ReportItem>());
-			sameRankReport.add(ri);
+			double grs = (double)(ri.getDemand() * (ri.getSupply()))/(double)ri.getSize();
+			if(!tempMap.containsKey(grs))
+				tempMap.put(grs, new Vector<ReportItem>());
+			tempMap.get(grs).add(ri);
 		}
 		reports.clear();
 		for(Double grs : tempMap.keySet())
@@ -32,10 +34,10 @@ public class CacheScheme
 		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			Vector<ReportItem> sameRankReport = tempMap.get(ri);
-			if(sameRankReport == null)
-				tempMap.put((double)(ri.getNumOfOtherHit())/(double)ri.getSize(), new Vector<ReportItem>());
-			sameRankReport.add(ri);
+			double grs = (double)ri.getNumOfOtherHit()/(double)ri.getSize();
+			if(!tempMap.containsKey(grs))
+				tempMap.put(grs, new Vector<ReportItem>());
+			tempMap.get(grs).add(ri);
 		}
 		reports.clear();
 		for(Double grs : tempMap.keySet())
@@ -52,10 +54,10 @@ public class CacheScheme
 		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			Vector<ReportItem> sameRankReport = tempMap.get(ri);
-			if(sameRankReport == null)
-				tempMap.put((double)ri.getNumOfOtherHit2()/(double)ri.getSize(), new Vector<ReportItem>());
-			sameRankReport.add(ri);
+			double grs =(double)ri.getNumOfOtherHit2()/(double)ri.getSize();
+			if(!tempMap.containsKey(grs))
+				tempMap.put(grs, new Vector<ReportItem>());
+			tempMap.get(grs).add(ri);
 		}
 		reports.clear();
 		for(Double grs : tempMap.keySet())
@@ -64,6 +66,7 @@ public class CacheScheme
 			for(ReportItem report : tempMap.get(grs))
 				reports.add(report);
 		}
+		
 	}
 	
 	
@@ -72,10 +75,10 @@ public class CacheScheme
 		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			Vector<ReportItem> sameRankReport = tempMap.get(ri);
-			if(sameRankReport == null)
-				tempMap.put(ri.getFreq()/ri.getSize(), new Vector<ReportItem>());
-			sameRankReport.add(ri);
+			double grs =ri.getFreq()/ri.getSize();
+			if(!tempMap.containsKey(grs))
+				tempMap.put(grs, new Vector<ReportItem>());
+			tempMap.get(grs).add(ri);
 		}
 		reports.clear();
 		for(Double grs : tempMap.descendingKeySet())
@@ -84,8 +87,7 @@ public class CacheScheme
 			for(ReportItem report : tempMap.get(grs))
 				reports.add(report);
 		}
-		
-		
+
 	}
 	
 	
@@ -94,10 +96,10 @@ public class CacheScheme
 		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			Vector<ReportItem> sameRankReport = tempMap.get(ri);
-			if(sameRankReport == null)
-				tempMap.put(ri.getFreq2()/ri.getSize(), new Vector<ReportItem>());
-			sameRankReport.add(ri);
+			double grs = ri.getFreq2()/ri.getSize();
+			if(!tempMap.containsKey(grs))
+				tempMap.put(grs, new Vector<ReportItem>());
+			tempMap.get(grs).add(ri);
 		}
 		reports.clear();
 		for(Double grs : tempMap.descendingKeySet())

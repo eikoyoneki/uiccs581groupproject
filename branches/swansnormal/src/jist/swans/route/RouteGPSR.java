@@ -2594,8 +2594,10 @@ public class RouteGPSR extends RouteGeo {
 	
 	public void receiveRelayMsg(MARKETRelayMsg relayMsg)
 	{
-		if(relayMsg != null)
+		if(relayMsg.getRelayReports().size() == 0)
 			reportbook.mergeReport(relayMsg.getRelayReports());
+		else
+			return;
 	}
 	
 	

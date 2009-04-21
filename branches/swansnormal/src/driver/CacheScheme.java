@@ -12,6 +12,7 @@ public class CacheScheme
 	public static void GRS(Vector<ReportItem> reports)
 	{
 		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
+		
 		for(ReportItem ri : reports)
 		{
 			double grs = (double)(ri.getDemand() * (ri.getSupply()))/(double)ri.getSize();

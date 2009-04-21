@@ -10,7 +10,7 @@ public class ReportBook {
 	static private long gRN = 0;//global report number control
 	
 	private Vector<ReportItem> ReportList;
-	private final int sizeLimit = 20;
+	private final int sizeLimit = JistExperiment.reportBookSize;
 	private HashSet<Long> neighborWantIdList = new HashSet<Long>();//what neighbor want IDSa - TSb
 	private HashSet<Long> selfunknowIdList = new HashSet<Long>(); //what the neighbor can offer IDSb - IDSa
 	private HashSet<Long> trackSet = new HashSet<Long>(); //store all the report id of the reports that has ever received by this node
@@ -269,7 +269,7 @@ public class ReportBook {
 	
 	public void rankReport()
 	{
-		CacheScheme.GRS(this.getReportList());
+		rankReport(this.getReportList());
 	}
 	
 	public void rankReport(Vector<ReportItem> reports)

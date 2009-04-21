@@ -21,7 +21,7 @@ public class ReportItem
 	private int numOfOtherHit2 = 0; // the number of hit correspond to the LRU2,
 									// and LFU2
 
-	private int duration = 0; // how long the report stay in the reportDB
+	private long duration = 0; // how long the report stay in the reportDB
 	private double freq = 0; // frequency of report accessed,added in need of
 								// LFU = numOfHit / duration,
 								// should be updated every simulation time
@@ -237,34 +237,37 @@ public class ReportItem
 		this.numOfOtherHit = numOfOtherHit;
 	}
 
-	public int getDuration()
+	public long getDuration()
 	{
+		duration = Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis();
 		return duration;
 	}
 
-	public void setDuration(int duration)
+	public void setDuration(long duration)
 	{
 		this.duration = duration;
 	}
 
 	public double getFreq()
 	{
+		setFreq();
 		return freq;
 	}
 
 	public double getFreq2()
 	{
+		setFreq2();
 		return freq2;
 	}
 
 	public void setFreq()
 	{
-		this.freq = (double) this.numOfHit / (double) this.duration;
+		this.freq = (double) this.numOfHit / (double) getDuration();
 	}
 
 	public void setFreq2()
 	{
-		this.freq2 = (double) this.numOfHit2 / (double) this.duration;
+		this.freq2 = (double) this.numOfHit2 / (double) getDuration();
 	}
 
 	public double getDemand()

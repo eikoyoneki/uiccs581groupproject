@@ -9,81 +9,104 @@ public class CacheScheme
 {
 	public static void GRS(Vector<ReportItem> reports)
 	{
-		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
+		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			tempMap.put((double)(ri.getDemand() * (1 - ri.getSupply()))/(double)ri.getSize(), ri);
+			Vector<ReportItem> sameRankReport = tempMap.get(ri);
+			if(sameRankReport == null)
+				tempMap.put((double)(ri.getDemand() * (ri.getSupply()))/(double)ri.getSize(), new Vector<ReportItem>());
+			sameRankReport.add(ri);
 		}
 		reports.clear();
 		for(Double grs : tempMap.keySet())
 		{
 			//the priority is higher if the value is smaller
-			reports.add(tempMap.get(grs));
+			for(ReportItem report : tempMap.get(grs))
+				reports.add(report);
 		}
 		
 	}
 	
 	public static void LRU1(Vector<ReportItem> reports)
 	{
-		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
+		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			tempMap.put((double)(ri.getNumOfOtherHit())/(double)ri.getSize(), ri);
+			Vector<ReportItem> sameRankReport = tempMap.get(ri);
+			if(sameRankReport == null)
+				tempMap.put((double)(ri.getNumOfOtherHit())/(double)ri.getSize(), new Vector<ReportItem>());
+			sameRankReport.add(ri);
 		}
 		reports.clear();
-		for(Double otherhit : tempMap.keySet())
+		for(Double grs : tempMap.keySet())
 		{
 			//the priority is higher if the value is smaller
-			reports.add(tempMap.get(otherhit));
+			for(ReportItem report : tempMap.get(grs))
+				reports.add(report);
 		}
-		
+	
 	}
 	
 	public static void LRU2(Vector<ReportItem> reports)
 	{
-		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
+		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			tempMap.put((double)ri.getNumOfOtherHit2()/(double)ri.getSize(), ri);
+			Vector<ReportItem> sameRankReport = tempMap.get(ri);
+			if(sameRankReport == null)
+				tempMap.put((double)ri.getNumOfOtherHit2()/(double)ri.getSize(), new Vector<ReportItem>());
+			sameRankReport.add(ri);
 		}
 		reports.clear();
-		for(Double otherhit : tempMap.keySet())
+		for(Double grs : tempMap.keySet())
 		{
-			reports.add(tempMap.get(otherhit));
+			//the priority is higher if the value is smaller
+			for(ReportItem report : tempMap.get(grs))
+				reports.add(report);
 		}
 	}
 	
 	
 	public static void LFU1(Vector<ReportItem> reports)
 	{
-		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
+		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			tempMap.put(ri.getFreq()/ri.getSize(), ri);
+			Vector<ReportItem> sameRankReport = tempMap.get(ri);
+			if(sameRankReport == null)
+				tempMap.put(ri.getFreq()/ri.getSize(), new Vector<ReportItem>());
+			sameRankReport.add(ri);
 		}
 		reports.clear();
-		
-		for(Double hit : tempMap.descendingKeySet())
+		for(Double grs : tempMap.descendingKeySet())
 		{
-			//the priority is higher if the value is larger
-			reports.add(tempMap.get(hit));
+			//the priority is higher if the value is smaller
+			for(ReportItem report : tempMap.get(grs))
+				reports.add(report);
 		}
+		
 		
 	}
 	
 	
 	public static void LFU2(Vector<ReportItem> reports)
 	{
-		TreeMap<Double,ReportItem> tempMap = new TreeMap<Double,ReportItem>();
+		TreeMap<Double,Vector<ReportItem>> tempMap = new TreeMap<Double,Vector<ReportItem>>();
 		for(ReportItem ri : reports)
 		{
-			tempMap.put(ri.getFreq2()/ri.getSize(), ri);
+			Vector<ReportItem> sameRankReport = tempMap.get(ri);
+			if(sameRankReport == null)
+				tempMap.put(ri.getFreq2()/ri.getSize(), new Vector<ReportItem>());
+			sameRankReport.add(ri);
 		}
 		reports.clear();
-		for(Double hit : tempMap.descendingKeySet())
+		for(Double grs : tempMap.descendingKeySet())
 		{
-			reports.add(tempMap.get(hit));
+			//the priority is higher if the value is smaller
+			for(ReportItem report : tempMap.get(grs))
+				reports.add(report);
 		}
+		
 		
 	}
 }

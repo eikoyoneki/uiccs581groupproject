@@ -77,9 +77,6 @@ import jist.swans.radio.RadioNoise;
 import jist.swans.radio.RadioNoiseAdditive;
 import jist.swans.radio.RadioNoiseIndep;
 import jist.swans.route.IDPair;
-import jist.swans.route.KNNMARKETMsg3;
-import jist.swans.route.KNNMARKETMsg4;
-import jist.swans.route.KNNRouteGPSR;
 import jist.swans.route.MARKETMsg3;
 import jist.swans.route.MARKETMsg4;
 import jist.swans.route.MARKETREQMsg;
@@ -92,8 +89,6 @@ import jist.swans.route.RouteInterface;
 import jist.swans.route.RouteGPSR.NeighborEntry;
 import jist.swans.route.geo.Ideal;
 import jist.swans.trans.TransUdp;
-;
-
 
 
 /**
@@ -116,7 +111,6 @@ public class GenericDriver {
     static int idUdp = 0;
     
     public static Vector<RouteGPSR> gpsrNodes = new Vector();
-    public static Vector<KNNRouteGPSR> knngpsrNodes = new Vector();
 
     /**
     * Add node to the field and start it.
@@ -292,23 +286,7 @@ public class GenericDriver {
 
         case Constants.NET_PROTOCOL_GPSR:
 
-        	if(je.knn==true)
-            {
-            	KNNRouteGPSR knngpsr = null;
-            	if (je.GPSR_ldb == Constants.GPSR_LOCATIONDB_IDEAL) {
-                    knngpsr = new KNNRouteGPSR(field, i, locDB);
-                }
-
-                //         gpsr.setStats(gpsrStats); // now it is static
-                knngpsr.setNetEntity(net.getProxy());
-                knngpsr.getProxy().start();
-                route = knngpsr.getProxy();
-                knngpsrNodes.add(knngpsr);
-            	
-            }
-            else
-            {
-        	RouteGPSR gpsr = null;
+            RouteGPSR gpsr = null;
 
             if (je.GPSR_ldb == Constants.GPSR_LOCATIONDB_IDEAL) {
                 gpsr = new RouteGPSR(field, i, locDB);
@@ -319,11 +297,8 @@ public class GenericDriver {
             gpsr.getProxy().start();
             route = gpsr.getProxy();
             gpsrNodes.add(gpsr);
-            }
-          
 
             //gpsr.setStats(zrpStats);
-
             break;
 
         default:
@@ -870,116 +845,9 @@ public class GenericDriver {
         
         
         System.out.println("a thread is generated, monitering the neighbor");
-        
-        boolean knn=false;
-        
         int numTotalIters = 500;
         long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
         long currentTime = 0;
-        
-        if(knn)
-        {
-        	for (int j = 0; j < numTotalIters; j++) {
-                JistAPI.runAt(new Runnable() {
-                        public void run() {
-                        	
-                            // get new neighbor list
-                        	Vector addedNeighbor = getNewNeighborList();
-                        	System.out.println("thread should be running");
-                        	// for each pair, call xiaowen's interface
-                        	for(int j = 0; j < addedNeighbor.size(); j++)
-                        	{
-                        		System.out.println("try to communicate");
-                        		IDPair p = (IDPair) addedNeighbor.get(j);
-                        		int src = p.part1;
-                        		int dst = p.part2;
-                        		
-                        		KNNRouteGPSR sourceNode = knngpsrNodes.get(src);
-                        		KNNRouteGPSR destinationNode = knngpsrNodes.get(dst);
-                        		System.out.println("src: " + sourceNode.getSelfId()
-                        				+ " , dst: " + destinationNode.getSelfId());
-                        		KNNMARKETMsg3 msg3 = sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()));
-                        		KNNMARKETMsg4 msg4 = destinationNode.sendMsg4(msg3); 
-                        		
-                        		sourceNode.receiveMSg4(msg4);
-                        		
-                        		Evaluation.increaseTotal_report_received(msg3.getAnswers().size() + msg4.getAnswers().size() + msg3.getBrokerReport().size() + msg4.getBrokerReport().size());
-                        		Evaluation.increaseMatch_throuhput(msg3.getAnswers().size() + msg4.getAnswers().size());
-                        		Evaluation.increaseTotal_answers(msg3.getAnswers().size() + msg4.getAnswers().size());
-                        		//System.out.println("the total answer is " + Evaluation.getTotal_answers());
-                        		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
-                        		System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
-                        		System.out.println("the recall result is " + Evaluation.getRecall());
-                        		System.out.println("the response time is " + Evaluation.getResponse_time());
-                        		
-                        	}
-                        	
-                        	addKNNNewReport();
-                        	//addNewQuery();
-                        	
-                        }
-                    }, currentTime);
-
-                currentTime += delayInterval;
-            } 
-        	
-        	/*
-             * for Relay Interaction
-             */
-            currentTime = 0;
-            for (int j = 0; j < numTotalIters; j++) {
-                JistAPI.runAt(new Runnable() {
-                        public void run() {
-                        	
-                        	for(int j = 0; j < knngpsrNodes.size(); j++)
-                        	{
-                        		// test if the current node: gpsrNodes.get(j) satisfies certain criteria
-                        		//  * to be completed *
-                        		// save the result into boolean condition
-                        		
-                        		boolean req = false;
-                        		
-                        		if(knngpsrNodes.get(j).relayNeed())
-                        		{
-                        			Vector neighbors = (Vector)NeighborHistory.neighborCurrent.get(j); // get the current neighbor list for node j
-                        			
-                        			// the vector neighbors stores the index of nodes in gpsrNodes
-                        			// for example, if neighbors contain a neighbor with value Integer:5
-                        			// this means one of the neighbors for node j is gpsrNodes.get(5)
-                        			
-                        			for(int k = 0; k < neighbors.size(); k++)
-                        			{
-                        				int oneOfNeighbors = (Integer)neighbors.get(k);
-                        				knngpsrNodes.get(oneOfNeighbors); // neighbor of j
-                        				System.out.println("relay communication between src : " + knngpsrNodes.get(j).getSelfId() + " to des : " + gpsrNodes.get(oneOfNeighbors).getSelfId());
-                        				MARKETREQMsg reqmsg = knngpsrNodes.get(oneOfNeighbors).sendREQMsg(knngpsrNodes.get(j).sendAdvMsg());
-                        				req = reqmsg.isReq();
-                        				if(req)
-                        					break;
-                        			}
-                        			if(req)
-                        			{
-    	                    			for(int k = 0; k < neighbors.size(); k++)
-    	                    			{
-    	                    				int oneOfNeighbors = (Integer)neighbors.get(k);
-    	                    				knngpsrNodes.get(oneOfNeighbors); 
-    	                    				knngpsrNodes.get(oneOfNeighbors).receiveRelayMsg(knngpsrNodes.get(j).sendRelayMsg());
-    	                    			}
-                        			}
-                        		}
-                        	}
-                        }
-                    }, currentTime);
-
-                currentTime += delayInterval;
-            } 
-        	
-        }        	
-        
-        
-        else
-        {
-       
         
 
         for (int j = 0; j < numTotalIters; j++) {
@@ -1029,7 +897,6 @@ public class GenericDriver {
         /*
          * for Relay Interaction
          */
-        currentTime = 0;
         for (int j = 0; j < numTotalIters; j++) {
             JistAPI.runAt(new Runnable() {
                     public void run() {
@@ -1042,7 +909,7 @@ public class GenericDriver {
                     		
                     		boolean req = false;
                     		
-                    		if(gpsrNodes.get(j).relayNeed())
+                    		if(gpsrNodes.get(j).getIdleTime() > 2000)
                     		{
                     			Vector neighbors = (Vector)NeighborHistory.neighborCurrent.get(j); // get the current neighbor list for node j
                     			
@@ -1076,10 +943,8 @@ public class GenericDriver {
 
             currentTime += delayInterval;
         } 
-        }//end else
         
         // the following is for iMote model
-       // long currentTime = 0;
         /*for (int j = 0; j < numTotalIters; j++) {
                 JistAPI.runAt(new Runnable() {
                         public void run() {
@@ -1119,19 +984,6 @@ public class GenericDriver {
             }*/
         
     } // buildField
-    
-    /*
-     * get the node's location by the index at gpsrNodes
-     */
-    public static Location getLocationByIndex(int index)
-    {
-    	RouteGPSR node = (RouteGPSR)gpsrNodes.get(index);
-    	if(node!=null)
-    	{
-    		return node.getCurrentLocation();
-    	}
-    	return null;
-    }
 
     /**
      * @author yuchen
@@ -1311,16 +1163,6 @@ public class GenericDriver {
     	for(RouteGPSR gpsr : gpsrNodes)
     	{
     		gpsr.generateNewReport();
-    	}
-    }
-    
-
-    public static void addKNNNewReport()
-    {
-    	for(KNNRouteGPSR gpsr : knngpsrNodes)
-    	{
-    		
-    		gpsr.generateNewReport(gpsr.getCurrentLocation().getX(),gpsr.getCurrentLocation().getY());
     	}
     }
     

@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class KNNReportItem {
 	
-	//try
+	
 	long report_id;
 	int home_node;
 	private Calendar createTime;
@@ -46,10 +46,9 @@ public class KNNReportItem {
 	
 	
 
-	public KNNReportItem(long report_id, int node, double x2, double y2) {
+	public KNNReportItem(int node, double x2, double y2) {
 		// TODO Auto-generated constructor stub
 		Random randomGenerator = new Random();
-		this.report_id = report_id;
 		this.home_node = node;
 		createTime = Calendar.getInstance();
 		this.x = x2;
@@ -63,19 +62,6 @@ public class KNNReportItem {
 	{
 		timeEncounteratNeighbor++;
 	}
-	
-	public void computeDemand(KNNQueryBook querybook,double max_dist)
-	{
-		int querynum = querybook.getQueryList().size();
-		double demand = 0.0;
-		for(KNNQueryItem query : querybook.getQueryList())
-		{
-
-				demand += match(query,max_dist);			
-		}
-		demand = demand / querynum;
-	}
-	
 
 	public void refresh()
 	{

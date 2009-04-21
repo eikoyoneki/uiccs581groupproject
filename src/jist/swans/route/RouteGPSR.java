@@ -57,11 +57,10 @@ import jist.swans.net.NetMessage.Ip;
 import jist.swans.route.geo.AddressGeographic;
 import jist.swans.route.geo.LocationDatabase;
 import driver.JistExperiment;
-//import driver.KNNQueryBook;
-import driver.KNNQueryBook;
-import driver.KNNQueryItem;
-import driver.KNNReportBook;
-import driver.KNNReportItem;
+import driver.QueryBook;
+import driver.QueryItem;
+import driver.ReportBook;
+import driver.ReportItem;
 import driver.Visualizer;
 
 /**
@@ -72,7 +71,7 @@ import driver.Visualizer;
  * of GPSR performance using more realistic settings in SWANS 
  * but also of the feasibility of porting NS-2 code to SWANS.
  */
-public class KNNRouteGPSR extends RouteGeo {
+public class RouteGPSR extends RouteGeo {
     
     ///////////////////////////////////////////
     // GPSR constants
@@ -126,10 +125,10 @@ public class KNNRouteGPSR extends RouteGeo {
     /** local mac address */
     private MacAddress macAddr;
     /** stats */
-    public static jist.swans.route.KNNRouteGPSR.GPSRStats stats = 
-        new jist.swans.route.KNNRouteGPSR.GPSRStats();
+    public static jist.swans.route.RouteGPSR.GPSRStats stats = 
+        new jist.swans.route.RouteGPSR.GPSRStats();
     
-    public KNNRouteGPSR selfNotEntity = this; //??????
+    public RouteGPSR selfNotEntity = this;
     
     public HashMap pendingTimers;
     
@@ -236,7 +235,7 @@ public class KNNRouteGPSR extends RouteGeo {
          * reliably transmitted */
 		private double reliablePercent = 0.5;
         
-        public NeighborTable(KNNRouteGPSR mya)
+        public NeighborTable(RouteGPSR mya)
         {
             super();
         }
@@ -592,7 +591,7 @@ public class KNNRouteGPSR extends RouteGeo {
     
     public class NeighborEntry extends AddressGeographic
     {
-        private KNNRouteGPSR a;
+        private RouteGPSR a;
         public boolean timerDisabled = false;
         public Vector peri;		// perimeter via this neighbor
         int perilen;			// length of perimeter
@@ -800,7 +799,7 @@ public class KNNRouteGPSR extends RouteGeo {
     public class GPSR_BeaconTimer extends NS2Timer
     {
         
-        public GPSR_BeaconTimer(KNNRouteGPSR a)
+        public GPSR_BeaconTimer(RouteGPSR a)
         {
             super(a, pendingTimers);
         }
@@ -817,7 +816,7 @@ public class KNNRouteGPSR extends RouteGeo {
     public class GPSR_LastPeriTimer extends NS2Timer
     {
         
-        public GPSR_LastPeriTimer(KNNRouteGPSR a)
+        public GPSR_LastPeriTimer(RouteGPSR a)
         {
             super(a, pendingTimers);
         }
@@ -834,7 +833,7 @@ public class KNNRouteGPSR extends RouteGeo {
     public class GPSR_PlanarTimer extends NS2Timer
     {
         
-        public GPSR_PlanarTimer(KNNRouteGPSR a)
+        public GPSR_PlanarTimer(RouteGPSR a)
         {
             super(a, pendingTimers);
         }
@@ -852,7 +851,7 @@ public class KNNRouteGPSR extends RouteGeo {
      * @param field
      * @param selfId
      */
-    public KNNRouteGPSR(Field field, int selfId, LocationDatabase ldb ) {
+    public RouteGPSR(Field field, int selfId, LocationDatabase ldb ) {
         super(field, selfId);
         init(selfId, ldb, JistExperiment.getJistExperiment());
         
@@ -864,7 +863,7 @@ public class KNNRouteGPSR extends RouteGeo {
      * @param selfId
      * @param je
      */
-    public KNNRouteGPSR(Field field, int selfId, LocationDatabase ldb, JistExperiment je) {
+    public RouteGPSR(Field field, int selfId, LocationDatabase ldb, JistExperiment je) {
         super(field, selfId);
         init(selfId, ldb, je);
     }
@@ -2345,9 +2344,9 @@ public class KNNRouteGPSR extends RouteGeo {
     /**
      * @param gpsrStats
      */
-    public void setStats(jist.swans.route.KNNRouteGPSR.GPSRStats gpsrStats) {
+    public void setStats(jist.swans.route.RouteGPSR.GPSRStats gpsrStats) {
         stats = gpsrStats;
-        KNNRouteGPSR.stats = stats;
+        RouteGPSR.stats = stats;
         
     }
     
@@ -2408,26 +2407,27 @@ public class KNNRouteGPSR extends RouteGeo {
 		return this.selfId;
 	}
 	
-	private KNNQueryBook querybook = new KNNQueryBook(this.selfId,200,200);
-	//need to add the location
-	
-	private KNNReportBook reportbook = new KNNReportBook(this.selfId, querybook);
+	private QueryBook querybook = new QueryBook(this.selfId);
+	private ReportBook reportbook = new ReportBook(this.selfId, querybook);
+	private final int msgSize = 20;
 	private Calendar lastMsgTime = Calendar.getInstance();
-	private final int msgSize = JistExperiment.msgSize;
+
 	
 	
-	
-	public void queryLocalDB(KNNQueryItem query)
+	public void queryLocalDB(QueryItem query)
 	{
 		
 	}
 	
-	public void generateNewReport(double x, double y)
+	public void generateNewReport()
 	{
-		reportbook.addReport(this.selfId, x,y,querybook);
+		reportbook.addReport(this.selfId, querybook);
 	}
 	
-	
+	public void generateNewQuery()
+	{
+		querybook.addNewQuery(this.selfId);
+	}
 	
 	/**
 	 * A send the first msg to the new neighbor B
@@ -2436,9 +2436,9 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * whichi means what the node can offer
 	 * @return
 	 */
-	public KNNMARKETMsg1 sendMsg1()
+	public MARKETMsg1 sendMsg1()
 	{
-		KNNMARKETMsg1 msg1 = new KNNMARKETMsg1(querybook, reportbook.getReportIdList());
+		MARKETMsg1 msg1 = new MARKETMsg1(querybook, reportbook.getReportIdList());
 		return msg1;
 	}
 	
@@ -2449,11 +2449,11 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * @param msg1
 	 * @return
 	 */
-	public KNNMARKETMsg2 sendMsg2(KNNMARKETMsg1 msg1)
+	public MARKETMsg2 sendMsg2(MARKETMsg1 msg1)
 	{
 		//do I have to query the report database here?
 		//and also update my query database?
-		KNNMARKETMsg2 msg2 = new KNNMARKETMsg2();
+		MARKETMsg2 msg2 = new MARKETMsg2();
 		msg2.setQuerybook(querybook);
 		//store the query list from A
 		querybook.setOtherQueryList(msg1.getQuerybook().getQueryList());
@@ -2489,7 +2489,7 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * @param msg2
 	 * @return
 	 */
-	public KNNMARKETMsg3 sendMsg3(KNNMARKETMsg2 msg2)
+	public MARKETMsg3 sendMsg3(MARKETMsg2 msg2)
 	{
 		reportbook.setSelfunknowIdList(msg2.getreportCanOffer());
 		reportbook.setNeighborWantIdList(msg2.getReportUnknown());
@@ -2499,10 +2499,10 @@ public class KNNRouteGPSR extends RouteGeo {
 		
 		reportbook.computeSupply(querybook);
 		
-		KNNMARKETMsg3 msg3 = new KNNMARKETMsg3();
+		MARKETMsg3 msg3 = new MARKETMsg3();
 		msg3.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
 		int size = 0;
-		for(KNNReportItem report : msg3.getAnswers())
+		for(ReportItem report : msg3.getAnswers())
 		{
 			size += report.getSize();
 		}
@@ -2528,15 +2528,15 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * @param msg3
 	 * @return
 	 */
-	public KNNMARKETMsg4 sendMsg4(KNNMARKETMsg3 msg3)
+	public MARKETMsg4 sendMsg4(MARKETMsg3 msg3)
 	{
-		KNNMARKETMsg4 msg4 = new KNNMARKETMsg4();
+		MARKETMsg4 msg4 = new MARKETMsg4();
 		reportbook.setNeighborWantIdList(msg3.getReportNeed());
 		reportbook.getHitReport(querybook.getOtherQueryList());
 		
 		msg4.setAnswers(reportbook.createAnswerMsg(msgSize, querybook.getOtherQueryList()));
 		int size = 0;
-		for(KNNReportItem report : msg3.getAnswers())
+		for(ReportItem report : msg3.getAnswers())
 		{
 			size += report.getSize();
 		}
@@ -2564,20 +2564,14 @@ public class KNNRouteGPSR extends RouteGeo {
 	 * A just merge the report
 	 * @param msg4
 	 */
-	public void receiveMSg4(KNNMARKETMsg4 msg4)
+	public void receiveMSg4(MARKETMsg4 msg4)
 	{
 		reportbook.mergeReport(msg4.getAnswers());
 		if(msg4.getBrokerReport().size() != 0)
 			reportbook.mergeReport(msg4.getBrokerReport());
 		querybook.updateBook();
 	}
-	public boolean relayNeed()
-	{
-		if(getIdleTime() > JistExperiment.relayTriggerDuration)
-			return true;
-		else
-			return false;
-	}
+
 	
 	public MARKETADVMsg sendAdvMsg()
 	{
@@ -2591,37 +2585,35 @@ public class KNNRouteGPSR extends RouteGeo {
 		return reqMsg;
 	}
 	
-	public KNNMARKETRelayMsg sendRelayMsg()
+	public MARKETRelayMsg sendRelayMsg()
 	{
-		KNNMARKETRelayMsg relayMsg = new KNNMARKETRelayMsg(reportbook.createRelayMsg());
+		MARKETRelayMsg relayMsg = new MARKETRelayMsg(reportbook.createRelayMsg());
 		return relayMsg;
 	}
 	
-
-	
-	public void receiveRelayMsg(KNNMARKETRelayMsg relayMsg)
+	public void receiveRelayMsg(MARKETRelayMsg relayMsg)
 	{
 		if(relayMsg != null)
 			reportbook.mergeReport(relayMsg.getRelayReports());
 	}
 	
 	
-	public KNNQueryBook getQuerybook()
+	public QueryBook getQuerybook()
 	{
 		return querybook;
 	}
 
-	public void setQuerybook(KNNQueryBook querybook)
+	public void setQuerybook(QueryBook querybook)
 	{
 		this.querybook = querybook;
 	}
 
-	public KNNReportBook getReportbook()
+	public ReportBook getReportbook()
 	{
 		return reportbook;
 	}
 
-	public void setReportbook(KNNReportBook reportbook)
+	public void setReportbook(ReportBook reportbook)
 	{
 		this.reportbook = reportbook;
 	}
@@ -2632,5 +2624,4 @@ public class KNNRouteGPSR extends RouteGeo {
 	}
 	
 }
-
 

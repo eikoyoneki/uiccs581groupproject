@@ -1,31 +1,31 @@
+//Wenxuan Gao  spring 2009
 package driver;
-
 
 import java.util.*;
 
 
-public class KNNQueryBook {
+public class QueryBook {
 	
 	static private long gQN = 0;//global Query number control
-	private LinkedList<KNNQueryItem> QueryList;
-	private final int sizeLimit = 1; 
+	private LinkedList<QueryItem> QueryList;
+	private final int sizeLimit = 10; 
 	private HashSet<Long> queryIdSet = new HashSet<Long>();
-	private LinkedList<KNNQueryItem> otherQueryList;//queylist get from other node in 
+	private LinkedList<QueryItem> otherQueryList;//queylist get from other node in 
 	
-	public KNNQueryBook(int node,double x, double y){
-		QueryList = new LinkedList<KNNQueryItem>();
-		addNewQuery(node,x,y);
+	public QueryBook(int node){
+		QueryList = new LinkedList<QueryItem>();
+		addNewQuery(node);
 	}
-	public KNNQueryBook(KNNQueryBook book){
+	public QueryBook(QueryBook book){
 		gQN = book.gQN;
 		QueryList = book.getQueryList();
 	}
 
 	
-	public void updateBook(KNNQueryBook queryfromOther)
+	public void updateBook(QueryBook queryfromOther)
 	{
-		HashSet<KNNQueryItem> queryneedSet = new HashSet();
-		for(KNNQueryItem query : queryfromOther.getQueryList())
+		HashSet<QueryItem> queryneedSet = new HashSet();
+		for(QueryItem query : queryfromOther.getQueryList())
 		{
 			if(!queryIdSet.contains(query.getQuery_id()))
 				queryneedSet.add(query);
@@ -36,14 +36,14 @@ public class KNNQueryBook {
 			for(int i = 0 ; i < spaceneed; ++i)
 				this.delFirst();
 		}
-		for(KNNQueryItem query : queryneedSet)
+		for(QueryItem query : queryneedSet)
 			this.addLast(query);
 	}
 	
 	public void updateBook()
 	{
-		HashSet<KNNQueryItem> queryneedSet = new HashSet();
-		for(KNNQueryItem query : otherQueryList)
+		HashSet<QueryItem> queryneedSet = new HashSet();
+		for(QueryItem query : otherQueryList)
 		{
 			if(!queryIdSet.contains(query.getQuery_id()))
 				queryneedSet.add(query);
@@ -54,7 +54,7 @@ public class KNNQueryBook {
 			for(int i = 0 ; i < spaceneed; ++i)
 				this.delFirst();
 		}
-		for(KNNQueryItem query : queryneedSet)
+		for(QueryItem query : queryneedSet)
 			this.addLast(query);
 	}
 	
@@ -77,16 +77,16 @@ public class KNNQueryBook {
 	
 	
 	//FIFO, add new item to the tail
-	synchronized public void addLast(KNNQueryItem q){
+	synchronized public void addLast(QueryItem q){
 		this.getQueryList().addLast(q);		
 		this.queryIdSet.add(q.getQuery_id());
 	}
 	
 	//when globaly generate a query, we can use this method to add the query to the node
 	//this is the only method should use to generate new query
-	public void addNewQuery(int node, double x, double y)
+	public void addNewQuery(int node)
 	{
-		KNNQueryItem query = new KNNQueryItem(++gQN, node, x, y);
+		QueryItem query = new QueryItem(++gQN, node);
 		if(QueryList.size() == sizeLimit)
 		{
 			delFirst();
@@ -103,14 +103,14 @@ public class KNNQueryBook {
 	
 	public boolean isQueryExisting(long q_id) {
 		// 
-		KNNQueryItem KNNQueryItem = null;
-		Iterator<KNNQueryItem> it=null;
+		QueryItem queryItem = null;
+		Iterator<QueryItem> it=null;
 		it = this.getQueryList().iterator();
 		while(it.hasNext())
 		{
-			KNNQueryItem =  it.next();
+			queryItem =  it.next();
 
-			if(KNNQueryItem.getQuery_id() == q_id)
+			if(queryItem.getQuery_id() == q_id)
 			{
 				return true;				
 			}
@@ -118,7 +118,7 @@ public class KNNQueryBook {
 		return false;
 	}
 	
-	public boolean isQueryExisting(KNNQueryItem q) {
+	public boolean isQueryExisting(QueryItem q) {
 		long qid=q.getQuery_id();
 		return isQueryExisting(qid);
 	}
@@ -129,10 +129,10 @@ public class KNNQueryBook {
 	public static void setGQN(long gqn) {
 		gQN = gqn;
 	}
-	public LinkedList<KNNQueryItem> getQueryList() {
+	public LinkedList<QueryItem> getQueryList() {
 		return QueryList;
 	}
-	public void setQueryList(LinkedList<KNNQueryItem> queryList) {
+	public void setQueryList(LinkedList<QueryItem> queryList) {
 		QueryList = queryList;
 	}
 	public HashSet<Long> getQueryIdSet()
@@ -147,11 +147,11 @@ public class KNNQueryBook {
 	{
 		return sizeLimit;
 	}
-	public LinkedList<KNNQueryItem> getOtherQueryList()
+	public LinkedList<QueryItem> getOtherQueryList()
 	{
 		return otherQueryList;
 	}
-	public void setOtherQueryList(LinkedList<KNNQueryItem> otherQueryList)
+	public void setOtherQueryList(LinkedList<QueryItem> otherQueryList)
 	{
 		this.otherQueryList = otherQueryList;
 	}
@@ -159,4 +159,3 @@ public class KNNQueryBook {
 	
 	
 }
-

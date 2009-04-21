@@ -238,6 +238,37 @@ public class ReportBook {
 	 * and we update the track set here.
 	 * @param reportSet
 	 */
+	public void mergeReport(Vector<ReportItem> reportSet, QueryBook querybook)
+	{
+		
+		int requiredsize = 0;
+		for(ReportItem report : reportSet)
+		{
+			requiredsize += report.getSize();
+		}
+
+		if(getBookSize() + requiredsize > sizeLimit)
+			this.rankReport();
+		//remove the low priority reports and 
+		//get enough space for the new reports
+		while(getBookSize() + requiredsize > sizeLimit)
+		{
+			delLastReport();
+		}
+
+		for(ReportItem report : reportSet)
+		{
+			report.refresh();
+			
+			queryNewReport(report, querybook);
+			ReportList.add(report);
+			trackSet.add(report.getReport_id());
+			reportIdList.add(report.getReport_id());
+			neverTransmitSet.add(report.getReport_id());
+		}
+		
+	}
+	
 	public void mergeReport(Vector<ReportItem> reportSet)
 	{
 		
@@ -259,6 +290,8 @@ public class ReportBook {
 		for(ReportItem report : reportSet)
 		{
 			report.refresh();
+			
+			//queryNewReport(report, querybook);
 			ReportList.add(report);
 			trackSet.add(report.getReport_id());
 			reportIdList.add(report.getReport_id());
@@ -274,7 +307,7 @@ public class ReportBook {
 	
 	public void rankReport(Vector<ReportItem> reports)
 	{
-		CacheScheme.LRU1(reports);
+		CacheScheme.GRS(reports);
 	}
 	
 	public int getBookSize()
@@ -306,6 +339,7 @@ public class ReportBook {
 		//Every new report have to be added using this method
 		//to ensure its id is unique
 		ReportItem report = new ReportItem(++gRN, node);
+		GlobalDB.addReport(report);
 		trackSet.add(report.getReport_id());
 		reportIdList.add(report.getReport_id());
 		neverTransmitSet.add(report.getReport_id());

@@ -77,10 +77,10 @@
    <int>2</int> 
   </void> 
    <void property="fieldX"> 
-   <int>700</int> 
+   <int>1000</int> 
   </void> 
   <void property="fieldY"> 
-   <int>600</int> 
+   <int>1000</int> 
   </void> 
 
  <!-- visualization options -->

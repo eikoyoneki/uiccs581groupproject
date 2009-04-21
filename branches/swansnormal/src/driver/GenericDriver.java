@@ -823,10 +823,11 @@ public class GenericDriver {
             }
         } // end if nodes
 
+        int totaltime = je.startTime + je.duration;
         if (je.measureMemory) { // get memory usage every 5 %
 
             int numTotalIters = 20;
-            long delayInterval = (long) Math.ceil(((double) je.duration * (double) Constants.SECOND) / (double) numTotalIters);
+            long delayInterval = (long) Math.ceil(((double) totaltime * (double) Constants.SECOND) / (double) numTotalIters);
             long currentTime = 0;
 
             for (int j = 0; j < numTotalIters; j++) {
@@ -845,7 +846,7 @@ public class GenericDriver {
             }
         }
         
-        int totaltime = je.startTime + je.duration;
+        
         
         System.out.println("a thread is generated, monitering the neighbor");
         int numTotalIters = 100;
@@ -882,8 +883,8 @@ public class GenericDriver {
                         		Evaluation.increaseTotal_answers(msg3.getAnswers().size() + msg4.getAnswers().size());
                         		//System.out.println("the total answer is " + Evaluation.getTotal_answers());
                         		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
-                        		System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
-                        		System.out.println("the recall result is " + Evaluation.getRecall());
+                        		//System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
+                        		//System.out.println("the recall result is " + Evaluation.getRecall());
                         		System.out.println("the response time is " + Evaluation.getResponse_time());
                         		System.out.println("this is the " + round + " round");
                         	}
@@ -976,9 +977,20 @@ public class GenericDriver {
                         		
                         		RouteGPSR sourceNode = gpsrNodes.get(src);
                         		RouteGPSR destinationNode = gpsrNodes.get(dst);
-                        		System.out.println("src: " + sourceNode.getSelfId()
-                        				+ " , dst: " + destinationNode.getSelfId());
-                        		sourceNode.receiveMSg4(destinationNode.sendMsg4(sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()))));
+                        		MARKETMsg3 msg3 = sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()));
+                        		MARKETMsg4 msg4 = destinationNode.sendMsg4(msg3); 
+                        		
+                        		sourceNode.receiveMSg4(msg4);
+                        		
+                        		Evaluation.increaseTotal_report_received(msg3.getAnswers().size() + msg4.getAnswers().size() + msg3.getBrokerReport().size() + msg4.getBrokerReport().size());
+                        		Evaluation.increaseMatch_throuhput(msg3.getAnswers().size() + msg4.getAnswers().size());
+                        		Evaluation.increaseTotal_answers(msg3.getAnswers().size() + msg4.getAnswers().size());
+                        		//System.out.println("the total answer is " + Evaluation.getTotal_answers());
+                        		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
+                        		//System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
+                        		//System.out.println("the recall result is " + Evaluation.getRecall());
+                        		System.out.println("the response time is " + Evaluation.getResponse_time());
+                        		System.out.println("this is the " + round + " round");
                         		
                         		
                         		
@@ -1237,9 +1249,9 @@ public class GenericDriver {
         }
 
         output += je.penetrationRatio;
-        System.out.println("the recall result is " + Evaluation.getRecall());
-        System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
-		
+        //System.out.println("the recall result is " + Evaluation.getRecall());
+        //System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
+		GlobalDB.computeResult();
 		System.out.println("the response time is " + Evaluation.getResponse_time());
 
         //clear memory

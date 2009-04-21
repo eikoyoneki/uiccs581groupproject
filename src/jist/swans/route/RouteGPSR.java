@@ -2410,7 +2410,7 @@ public class RouteGPSR extends RouteGeo {
 	private QueryBook querybook = new QueryBook(this.selfId);
 	private ReportBook reportbook = new ReportBook(this.selfId, querybook);
 	private final int msgSize = JistExperiment.msgSize;
-	private Calendar lastMsgTime = Calendar.getInstance();
+	private long lastMsgTime = JistAPI.getTime();
 
 	
 	
@@ -2515,7 +2515,7 @@ public class RouteGPSR extends RouteGeo {
 		
 		msg3.setReportNeed(reportbook.getSelfunknowIdList());
 
-		lastMsgTime = Calendar.getInstance();
+		lastMsgTime = JistAPI.getTime();
 		return msg3;
 	}
 	
@@ -2554,7 +2554,7 @@ public class RouteGPSR extends RouteGeo {
 		if(msg3.getBrokerReport().size() != 0)
 			reportbook.mergeReport(msg3.getBrokerReport());
 
-		lastMsgTime = Calendar.getInstance();
+		lastMsgTime = JistAPI.getTime();
 		return msg4;
 		
 	}
@@ -2566,6 +2566,9 @@ public class RouteGPSR extends RouteGeo {
 	 */
 	public void receiveMSg4(MARKETMsg4 msg4)
 	{
+		Vector<ReportItem> reportstoAdd = new Vector<ReportItem>();
+		reportstoAdd.addAll(msg4.getAnswers());
+		reportstoAdd.addAll(msg4.getBrokerReport());
 		reportbook.mergeReport(msg4.getAnswers());
 		if(msg4.getBrokerReport().size() != 0)
 			reportbook.mergeReport(msg4.getBrokerReport());
@@ -2595,7 +2598,7 @@ public class RouteGPSR extends RouteGeo {
 	public void receiveRelayMsg(MARKETRelayMsg relayMsg)
 	{
 		if(relayMsg.getRelayReports().size() == 0)
-			reportbook.mergeReport(relayMsg.getRelayReports());
+			reportbook.mergeReport(relayMsg.getRelayReports(), querybook);
 		else
 			return;
 	}
@@ -2623,7 +2626,7 @@ public class RouteGPSR extends RouteGeo {
 	
 	public long getIdleTime()
 	{
-		return Calendar.getInstance().getTimeInMillis() - lastMsgTime.getTimeInMillis();
+		return JistAPI.getTime() - lastMsgTime;
 	}
 	
 }

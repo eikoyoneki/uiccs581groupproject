@@ -71,7 +71,8 @@ public class ReportItem
 		this.report_id = id;
 		this.home_node = node;
 		createTime = Calendar.getInstance();
-		//JistAPI.getTime();
+		System.out.println("the simulation time is " + JistAPI.getTime());
+		
 		
 	}
 
@@ -108,7 +109,7 @@ public class ReportItem
 		numOfHit2 = 0;
 		numOfOtherHit2 = 0; 
 
-		duration = 1; 
+		duration -= (Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis()); 
 		freq = 1; 
 		freq2 = 0;
 	}
@@ -150,6 +151,8 @@ public class ReportItem
 				Evaluation.increaseTotal_response_time(time);
 				Evaluation.increaseTotal_answered_query(1);
 			}
+			GlobalDB.addMatchPair(q, this);
+			
 			return true;
 			
 		}
@@ -239,7 +242,7 @@ public class ReportItem
 
 	public long getDuration()
 	{
-		duration = Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis();
+		duration += Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis();
 		return duration;
 	}
 

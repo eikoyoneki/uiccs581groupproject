@@ -87,6 +87,7 @@ public class QueryBook {
 	public void addNewQuery(int node)
 	{
 		QueryItem query = new QueryItem(++gQN, node);
+		GlobalDB.addQuery(query);
 		if(QueryList.size() == sizeLimit)
 		{
 			delFirst();

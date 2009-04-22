@@ -873,10 +873,25 @@ public class GenericDriver {
                         		RouteGPSR destinationNode = gpsrNodes.get(dst);
                         		//System.out.println("src: " + sourceNode.getSelfId()
                         		//		+ " , dst: " + destinationNode.getSelfId());
+                        		System.out.println("begin query response");
                         		MARKETMsg3 msg3 = sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()));
+                        		System.out.println("send msg3");
                         		MARKETMsg4 msg4 = destinationNode.sendMsg4(msg3); 
-                        		
+                        		System.out.println("send msg4");
                         		sourceNode.receiveMSg4(msg4);
+                        		Vector<Integer> ANeigh = (Vector)NeighborHistory.neighborCurrent.get(src);
+                        		for(int Aneighbor : ANeigh)
+                        		{
+                        			RouteGPSR Anei = gpsrNodes.get(Aneighbor);
+                        			Anei.receiveMsg3(msg3);
+                        		}
+                        		Vector<Integer> BNeigh = (Vector)NeighborHistory.neighborCurrent.get(dst);
+                        		for(int Bneighbor : BNeigh)
+                        		{
+                        			RouteGPSR Bnei = gpsrNodes.get(Bneighbor);
+                        			Bnei.receiveMSg4(msg4);
+                        		}
+                        		
                         		
                         		Evaluation.increaseTotal_report_received(msg3.getAnswers().size() + msg4.getAnswers().size() + msg3.getBrokerReport().size() + msg4.getBrokerReport().size());
                         		Evaluation.increaseMatch_throuhput(msg3.getAnswers().size() + msg4.getAnswers().size());
@@ -885,6 +900,7 @@ public class GenericDriver {
                         		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
                         		//System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
                         		//System.out.println("the recall result is " + Evaluation.getRecall());
+                        		GlobalDB.computeResult();
                         		System.out.println("the response time is " + Evaluation.getResponse_time());
                         		System.out.println("this is the " + round + " round");
                         	}
@@ -977,20 +993,6 @@ public class GenericDriver {
                         		
                         		RouteGPSR sourceNode = gpsrNodes.get(src);
                         		RouteGPSR destinationNode = gpsrNodes.get(dst);
-                        		MARKETMsg3 msg3 = sourceNode.sendMsg3(destinationNode.sendMsg2(sourceNode.sendMsg1()));
-                        		MARKETMsg4 msg4 = destinationNode.sendMsg4(msg3); 
-                        		
-                        		sourceNode.receiveMSg4(msg4);
-                        		
-                        		Evaluation.increaseTotal_report_received(msg3.getAnswers().size() + msg4.getAnswers().size() + msg3.getBrokerReport().size() + msg4.getBrokerReport().size());
-                        		Evaluation.increaseMatch_throuhput(msg3.getAnswers().size() + msg4.getAnswers().size());
-                        		Evaluation.increaseTotal_answers(msg3.getAnswers().size() + msg4.getAnswers().size());
-                        		//System.out.println("the total answer is " + Evaluation.getTotal_answers());
-                        		//System.out.println("the total report is " + Evaluation.getTotal_report_received());
-                        		//System.out.println("the match ratio result is " + Evaluation.getMatch_ratio());
-                        		//System.out.println("the recall result is " + Evaluation.getRecall());
-                        		System.out.println("the response time is " + Evaluation.getResponse_time());
-                        		System.out.println("this is the " + round + " round");
                         		
                         		
                         		

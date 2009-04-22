@@ -4,12 +4,15 @@ package driver;
 import java.util.Calendar;
 import java.util.Random;
 
+import jist.runtime.JistAPI;
+
 public class QueryItem {
 	long  query_id;
 	int home_node;
 	double center;
 	double range;
 	private Calendar createTime;
+	private long createSimTime;
 	private boolean matched = false;
 	
 	
@@ -26,6 +29,7 @@ public class QueryItem {
 		double limit = Math.min(center, 1-center);
 		range = limit * randomGenerator.nextDouble(); 
 		createTime = Calendar.getInstance();
+		createSimTime = JistAPI.getTime();
 	}
 	
 	
@@ -42,6 +46,7 @@ public class QueryItem {
 		double limit = Math.min(center, 1-center);
 		range = limit * randomGenerator.nextDouble();
 		createTime = Calendar.getInstance();
+		createSimTime = JistAPI.getTime();
 	}
 	
 		
@@ -108,6 +113,20 @@ public class QueryItem {
 	{
 		this.matched = matched;
 	}
+
+
+	public long getCreateSimTime()
+	{
+		return createSimTime;
+	}
+
+
+	public void setCreateSimTime(long createSimTime)
+	{
+		this.createSimTime = createSimTime;
+	}
+	
+	
 	
 	
 }

@@ -255,7 +255,7 @@ public class JistExperiment implements JistAPI.DoNotRewrite
 	public static long relayTriggerDuration = 2;
 	public static int msgSize = 100;
 	public static int queryBookSize = 100;
-	public static int reportBookSize = 100;
+	public static int reportBookSize = 20;
 	
     // visualizaiton settings
 	/** if true, will visualize the simulation */

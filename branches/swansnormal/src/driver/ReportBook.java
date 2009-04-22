@@ -246,18 +246,19 @@ public class ReportBook {
 		{
 			requiredsize += report.getSize();
 		}
-
+		//System.out.println("stuck here?");
 		if(getBookSize() + requiredsize > sizeLimit)
 			this.rankReport();
 		//remove the low priority reports and 
 		//get enough space for the new reports
-		while(getBookSize() + requiredsize > sizeLimit)
+		while(getBookSize() + requiredsize > sizeLimit && ReportList.size() != 0)
 		{
 			delLastReport();
 		}
 
 		for(ReportItem report : reportSet)
 		{
+			//System.out.println("stuck here?");
 			report.refresh();
 			
 			queryNewReport(report, querybook);
@@ -277,20 +278,21 @@ public class ReportBook {
 		{
 			requiredsize += report.getSize();
 		}
-
+		
 		if(getBookSize() + requiredsize > sizeLimit)
 			this.rankReport();
 		//remove the low priority reports and 
 		//get enough space for the new reports
-		while(getBookSize() + requiredsize > sizeLimit)
+		//System.out.println("stuck here?");
+		while(getBookSize() + requiredsize > sizeLimit && ReportList.size() != 0)
 		{
 			delLastReport();
 		}
-
+		//System.out.println("stuck here?");
 		for(ReportItem report : reportSet)
 		{
 			report.refresh();
-			
+			//System.out.println("stuck here?");
 			//queryNewReport(report, querybook);
 			ReportList.add(report);
 			trackSet.add(report.getReport_id());
@@ -307,7 +309,7 @@ public class ReportBook {
 	
 	public void rankReport(Vector<ReportItem> reports)
 	{
-		CacheScheme.GRS(reports);
+		CacheScheme.LRU1(reports);
 	}
 	
 	public int getBookSize()

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import jist.runtime.JistAPI;
+import jist.swans.Constants;
 
 public class ReportItem
 {
@@ -13,6 +14,7 @@ public class ReportItem
 	private int size;
 	private double value;
 	private Calendar createTime;
+	private long createSimTime;
 
 	private int numOfHit = 0; // number of hit for this report in the certain node
 	private int numOfOtherHit = 0; // number of hit for other report in the node after the hit of itself
@@ -21,7 +23,7 @@ public class ReportItem
 	private int numOfOtherHit2 = 0; // the number of hit correspond to the LRU2,
 									// and LFU2
 
-	private long duration = 0; // how long the report stay in the reportDB
+	private long duration = 0; // how long the report stay in the specific reportDB
 	private double freq = 0; // frequency of report accessed,added in need of
 								// LFU = numOfHit / duration,
 								// should be updated every simulation time
@@ -57,7 +59,7 @@ public class ReportItem
 		this.report_id = id;
 		this.home_node = node;
 		createTime = Calendar.getInstance();
-		
+		createSimTime = JistAPI.getTime();
 	}
 	
 	public ReportItem(long id, int node)
@@ -72,9 +74,30 @@ public class ReportItem
 		this.home_node = node;
 		createTime = Calendar.getInstance();
 		System.out.println("the simulation time is " + JistAPI.getTime());
-		
+		createSimTime = JistAPI.getTime();
 		
 	}
+	
+	/*public ReportItem(ReportItem report)
+	{
+		this.age = report.age;
+		this.createSimTime = report.createSimTime;
+		this.createTime = report.createTime;
+		this.demand = report.demand;
+		this.duration = report.duration;
+		this.freq = report.freq;
+		this.freq2 = report.freq2;
+		this.home_node = report.home_node;
+		this.numOfHit = report.numOfHit;
+		this.numOfHit2 = report.numOfHit2;
+		this.numOfOtherHit = report.numOfOtherHit;
+		this.numOfOtherHit2 = report.numOfOtherHit2;
+		this.report_id = report.report_id;
+		this.size = report.size;
+		this.supply = report.supply;
+		this.timeEncounteratNeighbor = report.timeEncounteratNeighbor;
+		this.value = report.value;
+	}*/
 
 	/**
 	 * calculate the demand of a certain report
@@ -109,9 +132,14 @@ public class ReportItem
 		numOfHit2 = 0;
 		numOfOtherHit2 = 0; 
 
-		duration -= (Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis()); 
+		duration = -(JistAPI.getTime() - createSimTime);
+		//duration = -(Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis()); 
 		freq = 1; 
 		freq2 = 0;
+		demand = 0;
+		supply = 0;
+		timeEncounteratNeighbor = 0;
+		age = 0;
 	}
 
 	public void increasefi()
@@ -147,8 +175,8 @@ public class ReportItem
 			if(!q.isMatched())
 			{
 				q.setMatched(true);
-				long time = Calendar.getInstance().getTimeInMillis() - q.getCreateTime().getTimeInMillis();
-				Evaluation.increaseTotal_response_time(time);
+				long time = JistAPI.getTime() - q.getCreateSimTime();
+				Evaluation.increaseTotal_response_time((double)time/(double)Constants.SECOND);
 				Evaluation.increaseTotal_answered_query(1);
 			}
 			GlobalDB.addMatchPair(q, this);
@@ -242,7 +270,8 @@ public class ReportItem
 
 	public long getDuration()
 	{
-		duration += Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis();
+		duration += JistAPI.getTime() - createSimTime;
+		//duration += Calendar.getInstance().getTimeInMillis() - createTime.getTimeInMillis();
 		return duration;
 	}
 
@@ -265,12 +294,12 @@ public class ReportItem
 
 	public void setFreq()
 	{
-		this.freq = (double) this.numOfHit / (double) getDuration();
+		this.freq = (double) this.numOfHit / ((double) getDuration()/(double)Constants.SECOND);
 	}
 
 	public void setFreq2()
 	{
-		this.freq2 = (double) this.numOfHit2 / (double) getDuration();
+		this.freq2 = (double) this.numOfHit2 / ((double) getDuration()/(double)Constants.SECOND);
 	}
 
 	public double getDemand()

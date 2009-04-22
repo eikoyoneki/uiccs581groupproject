@@ -2550,13 +2550,25 @@ public class RouteGPSR extends RouteGeo {
 		//update the query database
 		querybook.updateBook();
 		//merge the report
-		reportbook.mergeReport(msg3.getAnswers());
+		System.out.println("merge report");
+		if(msg3.getAnswers().size() != 0)
+			reportbook.mergeReport(msg3.getAnswers());
+		System.out.println("merge broker report");
 		if(msg3.getBrokerReport().size() != 0)
 			reportbook.mergeReport(msg3.getBrokerReport());
 
+		System.out.println("try to get sim time" + JistAPI.getTime());
 		lastMsgTime = JistAPI.getTime();
 		return msg4;
 		
+	}
+	
+	public void receiveMsg3(MARKETMsg3 msg3)
+	{
+		Vector<ReportItem> reportstoAdd = new Vector<ReportItem>();
+		reportstoAdd.addAll(msg3.getAnswers());
+		reportstoAdd.addAll(msg3.getBrokerReport());
+		reportbook.mergeReport(reportstoAdd);
 	}
 	
 	/**
@@ -2569,9 +2581,7 @@ public class RouteGPSR extends RouteGeo {
 		Vector<ReportItem> reportstoAdd = new Vector<ReportItem>();
 		reportstoAdd.addAll(msg4.getAnswers());
 		reportstoAdd.addAll(msg4.getBrokerReport());
-		reportbook.mergeReport(msg4.getAnswers());
-		if(msg4.getBrokerReport().size() != 0)
-			reportbook.mergeReport(msg4.getBrokerReport());
+		reportbook.mergeReport(reportstoAdd);
 		querybook.updateBook();
 	}
 

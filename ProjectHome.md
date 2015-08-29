@@ -1,0 +1,6 @@
+Project 1. Cooperative Caching in Mobile P2P Databases (two groups each with 5 students)
+
+The objective of this project is to design and evaluate cooperative caching schemes for query processing in mobile P2P databases. The recommended schemes are described in Appendix A. Students may come up with their own schemes to replace the recommended schemes.
+The project should compare the schemes under various environments in terms of the query generation pattern and the mobility model. For each scheme, find an environment such that it performs the best among all the compared schemes. If such an environment does not exist, then explain why the scheme is strictly dominated by others.
+One possible query pattern would be that each mobile peer has a single fixed query. Another possible pattern is that each mobile peer dynamically generates queries. Another possible pattern is the KNN query as discussed in section 5 of Appendix A.
+One possible mobility model is RWP (random way-point). Another possible mobility model is real traces such as iMotes (see http://crawdad.cs.dartmouth.edu/meta.php?name=cambridge/haggle).
